@@ -20,5 +20,8 @@
   "homepage": "https://github.com/Raxabi/halley.js#readme",
   "dependencies": {
     "@types/node": "^17.0.40"
+  },
+  "devDependencies": {
+    "express": "4.18.1"
   }
 }
