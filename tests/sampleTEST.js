@@ -1,5 +1,5 @@
-import express from "express";
+import http from "node:http";
 
-const app = express();
-
-app.get
+console.log(http.METHODS.reduce(() => {
+    
+}));
