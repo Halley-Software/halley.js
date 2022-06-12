@@ -1,5 +1,8 @@
-import http from "node:http";
+import express, { Router } from "express";
 
-console.log(http.METHODS.reduce(() => {
-    
-}));
+const app = express();
+const router = Router();
+
+router.get("/", (req, res) => {
+    res.send("<h1>Hello World!</h1>");
+});

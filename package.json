@@ -1,7 +1,9 @@
 {
-  "name": "halley",
-  "version": "1.0.0",
-  "description": "",
+  "name": "halley.js",
+  "author": "Raxabi",
+  "version": "0.0.1",
+  "description": "The small, fast and easy Web Framework inspired in Express",
+  "keywords": ["Framework", "Web", "REST", "CRUD"],
   "main": "index.js",
   "type": "module",
   "directories": {
@@ -14,17 +16,17 @@
     "type": "git",
     "url": "git+https://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@github.com/Raxabi/halley.js.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Raxabi/halley.js/issues"
   },
   "homepage": "https://github.com/Raxabi/halley.js#readme",
-  "dependencies": {
-    "@types/node": "17.0.41"
-  },
   "devDependencies": {
+    "@types/node": "17.0.42",
+    "eslint": "8.17.0",
     "express": "4.18.1"
+  },
+  "dependencies": {
+    "pino": "8.0.0"
   }
 }
