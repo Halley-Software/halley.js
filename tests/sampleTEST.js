@@ -1,8 +1,5 @@
-import express, { Router } from "express";
+"Testing constructor functions";
 
-const app = express();
-const router = Router();
-
-router.get("/", (req, res) => {
-    res.send("<h1>Hello World!</h1>");
-});
+function Hola(name) {
+    this.name = name
+}

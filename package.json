@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "description": "The small, fast and easy Web Framework inspired in Express",
   "keywords": ["Framework", "Web", "REST", "CRUD"],
-  "main": "index.js",
+  "main": "lib/core/halley.js",
   "type": "module",
   "directories": {
+    "lib": "lib",
     "test": "tests"
   },
   "scripts": {
@@ -16,7 +17,7 @@
     "type": "git",
     "url": "git+https://github.com/Raxabi/halley.js.git"
   },
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Raxabi/halley.js/issues"
   },

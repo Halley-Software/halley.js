@@ -1,6 +1,6 @@
-import { Halley } from "../src/halley";
+import { Halley } from "../lib/core/halley"
 
-const halley = new Halley()
+const halley = new Halley();
 const port = 3000 || process.env.PORT
 
 

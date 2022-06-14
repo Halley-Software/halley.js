@@ -1,5 +1,7 @@
 # Halley.JS ☄️
-## The small, fast and easy Web Framework inspired in Express
+# The small, fast and easy Web Framework inspired in Express
+
+## The Alpha 0.0.1 version will finish when a simple web page can be maded with Halley.JS
 
 The documentation will be available when the basis of the framework will be ended
 > I hope that the framework basis were ended in one or two years and I can present it as a end-of-degree work
