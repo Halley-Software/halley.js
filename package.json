@@ -4,20 +4,20 @@
   "version": "0.0.1",
   "description": "The small, fast and easy Web Framework inspired in Express",
   "keywords": ["Framework", "Web", "REST", "CRUD"],
+  "license": "MIT",
   "main": "lib/core/halley.js",
   "type": "module",
+  "scripts": {
+    "basic": "node tests/main.js"
+  },
   "directories": {
     "lib": "lib",
     "test": "tests"
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Raxabi/halley.js.git"
   },
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/Raxabi/halley.js/issues"
   },

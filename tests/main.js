@@ -1,9 +1,18 @@
-import { Halley } from "../lib/core/halley"
+import { Halley } from "../lib/core/halley.js";
 
 const halley = new Halley();
 const port = 3000 || process.env.PORT
 
+halley.get();
 
-halley.ready(port)
-    .then(console.info(`Server listening on port ${port}`))
-    .catch(console.error("Something was wrong attemping to start the server :("))
+async function initServer(port) {
+    await halley.ready(port, () => {
+        console.log(`Server listening on port ${port}`);
+    });
+};
+
+try {
+    initServer(port);
+} catch (error) {
+    console.error(error);
+}
