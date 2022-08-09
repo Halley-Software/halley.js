@@ -1,18 +1,19 @@
-import { Halley } from "../lib/core/halley.js";
+import HRouter from "../lib/core/router/halley.router.js"
 
-const halley = new Halley();
-const port = 3000 || process.env.PORT
+const encoder = new TextEncoder
 
-halley.get();
+export const handler = (req) => {
+    if (req.url === "/") {
+        function main(req, res) {
+            res.write(encoder.encode("<h1>LOL esta es la ruta Principal</h1>"))
+            res.end()
+        }
+    }
 
-async function initServer(port) {
-    await halley.ready(port, () => {
-        console.log(`Server listening on port ${port}`);
-    });
-};
-
-try {
-    initServer(port);
-} catch (error) {
-    console.error(error);
+    if (req.url === "/about") {
+        function about(req, res) {
+            res.write(encoder.encode("<h1>LOL esta es la ruta About</h1>"))
+            res.end()
+        }
+    }
 }
