@@ -2,7 +2,7 @@
 
 import http from "node:http";
 
-class Call extends http.IncomingMessage {
+class Req extends http.IncomingMessage {
     /**
       * Return a HTTP header passed to the method
       * 
@@ -27,4 +27,4 @@ class Call extends http.IncomingMessage {
     };
 };
 
-export default Call
+export default Req

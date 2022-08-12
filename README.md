@@ -1,5 +1,5 @@
 # Halley.JS ☄️
-# The small, fast and easy web framework that be part of [Laniakea](https://github.com/Raxabi/Laniakea.JS) package group
+# The small, fast and easy web framework that be part of [Laniakea](https://github.com/Raxabi/Laniakea.js) package group
 
 ## The Alpha 0.0.1 version will finish when a simple web page can be maded with Halley.JS
 
