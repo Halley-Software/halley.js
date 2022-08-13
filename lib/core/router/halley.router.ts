@@ -1,15 +1,12 @@
 'use strict';
 
-import { IncomingMessage, ServerResponse, type RequestListener } from "node:http"
+import { type Handler } from "../halley";
 
-export type Handler<req = IncomingMessage, res = ServerResponse> = {
-    path?: string,
-    callback?: 
-}
+export type RouteHandler = () => void
 
 export class HRouter {
-    get: Handler
-    post: Handler
-    put: Handler
-    delete: Handler
+    get: RouteHandler
+    post: RouteHandler
+    put: RouteHandler
+    delete: RouteHandler
 }

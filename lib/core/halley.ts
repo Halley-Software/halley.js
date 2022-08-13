@@ -10,13 +10,13 @@
 /**
  * Node.JS dependencies
  */
-import http, { type RequestListener } from "node:http";
+import http, { type IncomingMessage, type ServerResponse } from "node:http";
 
 /**
  * Halley.JS dependencies
  */
 
-import { HRouter, type Handler } from "./router/halley.router";
+export type Handler = (req: IncomingMessage, res: ServerResponse) => void
 
 export class Halley {
     /**
@@ -24,12 +24,12 @@ export class Halley {
      * 
      * An example will can something like this:
      * 
-     *      await halley.ready(app, port)
+     *      halley.ready(app, port)
      * 
-     * @param {RequestListener} app A handler that manage the route when a request incoming to the route
-     * @param {Number} port The port is needed to indicate the server where to need listen requests
+     * @param {Handler} app A handler that manage the route when a request incoming to that route
+     * @param {Number} port The port is needed to indicate the server where to need listen requests. The default port is 3000
      */
-    ready(app: RequestListener, port: number) {
+    ready(app: Handler, port: number = 3000) {
         http.createServer(app).listen(port)
     };
 };
