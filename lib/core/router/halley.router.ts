@@ -1,12 +1,22 @@
 'use strict';
 
-import { type Handler } from "../halley";
-
-export type RouteHandler = () => void
+/**
+ * Halley.JS dependencies
+ */
+import { type RouteHandler } from "../halley";
 
 export class HRouter {
-    get: RouteHandler
-    post: RouteHandler
-    put: RouteHandler
-    delete: RouteHandler
+    get: RouteHandler;
+    post: RouteHandler;
+    put: RouteHandler;
+    delete: RouteHandler;
+    private routes = [];
+
+    constructor() {
+        this.get;
+        this.post;
+        this.put;
+        this.delete;
+        this.routes;
+    }
 }
