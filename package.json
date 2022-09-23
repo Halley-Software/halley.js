@@ -5,7 +5,7 @@
   "contributors": [
     "Raxabi"
   ],
-  "description": "The small, fast and easy Web Framework that be part of Laniakea package group. Inspired in Express",
+  "description": "The small, fast and easy Web Framework part of Laniakea package group. Inspired in Express",
   "keywords": [
     "Framework",
     "Web",
@@ -15,7 +15,7 @@
   "license": "MIT",
   "main": "lib/core/halley.ts",
   "scripts": {
-    "test": "nodemon test/test.ts"
+    "test": "nodemon test/index.ts"
   },
   "directories": {
     "lib": "lib",
@@ -29,12 +29,12 @@
     "url": "https://github.com/Raxabi/halley.js/issues"
   },
   "homepage": "https://github.com/Raxabi/halley.js#readme",
+  "dependencies": {
+    "pino": "8.6.0"
+  },
   "devDependencies": {
-    "eslint": "^8.21.0",
+    "eslint": "^8.23.1",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1"
-  },
-  "dependencies": {
-    "pino": "^8.4.1"
   }
 }
