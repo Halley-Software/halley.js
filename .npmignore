@@ -1,0 +1,8 @@
+node_modules/
+.gitignore
+Halley.JS.jpg
+package-lock.json
+test
+.eslintignore
+.eslintrc.json
+lib
