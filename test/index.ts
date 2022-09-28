@@ -1,38 +1,23 @@
 import { Halley } from "../lib/core/halley"
+import { HColors } from "../lib/utils/halley.colors"
 
-import * as RTypes from "../lib/core/types/router.types"
-import { HRouter } from "../lib/core/router/halley.router"
-
-const halley = new Halley({port: 5000})
-const router = new HRouter
-
-router.add([
-    {
-        path: "/",
-        method: "get",
-        requestHandler: ((req, res) => {
-            res.end("<h1>Hello World!</h1>");
-        })
-    },
-    {
-        path: "/about",
-        method: "get",
-        requestHandler: ((req, res) => {
-            res.end("<h1>Hello World from About Page!</h1>");
-        })
-    },
-])
-
-router.add({
-    path: "/",
-    method: "post",
-    requestHandler: ((req, res) => {
-        res.end("<h1>Enviando datos!</h1>")
-    })
+const halley = new Halley({
+    port: 5000,
+    env: "development"
 })
 
-halley.use(router)
+const hcolors = new HColors(`Halley listening on port ${halley.port}`, `${halley.port}`)
 
-halley.ready((req, res) => {
+halley.get("/", (req, res) => {
     res.end("<h1>Hello World!</h1>")
 })
+
+halley.get("/sexo", (req, res) => {
+    res.end("<h1>Hello from Sex</h1>")
+})
+
+try {
+    halley.ready(hcolors.print("cyan"))
+} catch (error: any) {
+    console.error(error)
+}

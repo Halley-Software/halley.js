@@ -12,6 +12,8 @@ function foo(object: Sex | Sex[]) {
     return object
 }
 
-console.log(foo({
-    hello: "sexo"
-}))
+const array1 = [{}]
+
+const array2 = [array1]
+
+console.log(array2.flat(Infinity))
