@@ -1,11 +1,13 @@
+/**
+ * The router is a essential part of all the web frameworks.
+ * Mostly of time it is used to take the routes gived by the developer and process it somehow.
+ */
+
 'use strict';
 
 /**
  * Node.JS Dependencies
  */
-
-//* Type Anotation
-import { RequestListener } from "node:http";
 
 //* Test Expressions
 import { ok } from "node:assert";
@@ -13,28 +15,24 @@ import { ok } from "node:assert";
 /**
  * Halley.JS Dependencies
  */
-import { Request } from "../request";
-import { Reply } from "../response";
 
-//* Type Anotation
-import * as RTypes from "../types/router.types";
-
-// Types Halley Router
+//* Type Anotations
+import { Route, RouteParam } from "../../types/router.types";
 
 export class HRouter {
 
-    private routes: RTypes.Route[] = [];
+    public readonly routes: Route[] = [];
 
     /**
      * 
-     * @Anotation This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
+     * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
      * 
-     * @param optionsStack An array or an literal object, if is an array, you can give many routes.
+     * @param incomingRoutes An array or an literal object, if is an array, you can give many routes.
      * 
      * Meanwhile, if is an literal object you must use the method as much as routes want add.
      * 
      * @example
-     *      const router = new HRouter
+     * // If the param gived is an Array:
      *      router.add([{
      *          path: "/",
      *          method: "get",
@@ -43,35 +41,46 @@ export class HRouter {
      *          })
      *      }])
      * 
+     * @example
+     * // If the gived param is an literal object:
+     *      router.add({
+     *          path: "/",
+     *          method: "get",
+     *          requestHandler: ((req, res) => {
+     *              res.end("<h1>Hello World!</h1>")
+     *          })
+     *      })
+     * // With this way you only can add one route every time 'add' method is called
+     * 
      * @returns The route stack of the class HRouter
      * 
      * @public
      */
-    public add(optionsStack: RTypes.RouteParam) {
 
-        if (Array.isArray(optionsStack)) {
-            optionsStack.forEach((routeItem: RTypes.Route) => {
-                // Check if any property wasn't gived
-                ok(routeItem.path);
-                ok(routeItem.method);
-                ok(routeItem.requestHandler);
+    public add(incomingRoutes: RouteParam): this {
 
-                // Covering problem that may exist
-                routeItem.method = routeItem.method.toUpperCase();
+        function checkAndPush(objectRoute: Route) {
+            let { path, method, handler } = objectRoute;
+            // Check if any property wasn't gived
+            ok(path);
+            ok(method);
+            ok(handler);
 
-                this.routes.push(routeItem);
+            // Covering problem that may exist
+            method = method.toUpperCase();
+
+            return objectRoute;
+        }
+
+        if (Array.isArray(incomingRoutes)) {
+            incomingRoutes.forEach((routeItem: Route) => {
+                this.routes.push(checkAndPush(routeItem));
             });
         }
 
-        else if (Object.getPrototypeOf(optionsStack) === Object.prototype) {
-            ok(optionsStack.path);
-            ok(optionsStack.method);
-            ok(optionsStack.requestHandler);
-    
-            // Covering problem that may exist
-            optionsStack.method = optionsStack.method.toUpperCase();
-    
-            this.routes.push(optionsStack);
+        else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
+            this.routes.push(checkAndPush(incomingRoutes))
         };
+        return this;
     };
 };
