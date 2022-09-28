@@ -6,6 +6,4 @@
 
 import { IncomingMessage } from "node:http"
 
-export class Request extends IncomingMessage {
-    
-}
+export class Request extends IncomingMessage {}

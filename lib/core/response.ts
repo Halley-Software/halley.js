@@ -6,6 +6,4 @@
 
 import { ServerResponse } from "node:http"
 
-export class Reply extends ServerResponse {
-
-}
+export class Reply extends ServerResponse {}
