@@ -1,6 +1,9 @@
-import { Halley } from "./lib/core/halley"
-import { HRouter as HalleyRouter } from "./lib/core/router/halley.router"
-import * as RouterTypes from "./lib/core/types/router.types"
+import { Halley } from "./dist/core/halley.js"
+import * as HalleyTypes from "./dist/types/halley.types.js"
+import { HRouter as HalleyRouter } from "./dist/core/router/halley.router.js"
+import * as RouterTypes from "./dist/types/router.types.js"
+import { HColors } from "./dist/utils/halley.colors.js"
+import * as HColorsTypes from "./dist/types/HColors.types.js"
 
 let contributors = {
     "main_developers": {
@@ -8,8 +11,11 @@ let contributors = {
             "Contributions": {
                 "Core": [Halley],
                 "Router": [HalleyRouter],
+                "HColors": [HColors],
                 "types": [
-                    [RouterTypes]
+                    [HalleyTypes],
+                    [RouterTypes],
+                    [HColorsTypes]
                 ],
                 "Main Committer": "Literally Me"
             }
