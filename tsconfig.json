@@ -1,5 +1,15 @@
 {
     "compilerOptions": {
-        "strictPropertyInitialization": false
-    }
+        "strictPropertyInitialization": false,
+        "noImplicitAny": true,
+        "strict": true,
+        "target": "ES2020",
+        "module": "ES2020",
+        "esModuleInterop": true,
+        "rootDir": "lib",
+        "outDir": "dist",
+        "declaration": true,
+        "declarationDir": "dist"
+    },
+    "include": ["lib"]
 }
