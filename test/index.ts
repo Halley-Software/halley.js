@@ -1,23 +1,15 @@
-import { Halley } from "../lib/core/halley"
-import { HColors } from "../lib/utils/halley.colors"
+import { Halley } from "../lib/core/halley.js"
+import { HColors } from "../lib/utils/halley.colors.js"
 
 const halley = new Halley({
-    port: 5000,
-    env: "development"
+    port: 5000
 })
 
-const hcolors = new HColors(`Halley listening on port ${halley.port}`, `${halley.port}`)
+const colors = new HColors("Server listening on port 5000", "5000")
 
 halley.get("/", (req, res) => {
-    res.end("<h1>Hello World!</h1>")
 })
 
-halley.get("/sexo", (req, res) => {
-    res.end("<h1>Hello from Sex</h1>")
-})
+console.log(halley)
 
-try {
-    halley.ready(hcolors.print("cyan"))
-} catch (error: any) {
-    console.error(error)
-}
+halley.ready(colors.print("cyan"))

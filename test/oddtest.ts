@@ -1,19 +1,11 @@
-interface Sex {
-    hello: string
-}
+import { STATUS_CODES } from "node:http";
 
-function foo(object: Sex | Sex[]) {
+/* if (Object.getPrototypeOf(STATUS_CODES) === Object.prototype) {
+    console.log("LOL");
+}; */
 
-    if(Array.isArray(object)) {
-        object.forEach
-    }
+const statusArray = Object.entries(STATUS_CODES)
 
-    if (Object.getPrototypeOf(object) === Object.prototype)
-    return object
-}
-
-const array1 = [{}]
-
-const array2 = [array1]
-
-console.log(array2.flat(Infinity))
+statusArray.forEach((index) => {
+    console.log(index[0])
+})
