@@ -21,6 +21,9 @@ import { Route, RouteParam } from "../../types/router.types";
 
 export class HRouter {
 
+    /**
+     * An array that contain all the routes added with router.add method
+     */
     public readonly routes: Route[] = [];
 
     /**
@@ -59,7 +62,7 @@ export class HRouter {
 
     public add(incomingRoutes: RouteParam): this {
 
-        function checkAndPush(objectRoute: Route) {
+        function checkParams(objectRoute: Route): Route {
             let { path, method, handler } = objectRoute;
             // Check if any property wasn't gived
             ok(path);
@@ -74,13 +77,14 @@ export class HRouter {
 
         if (Array.isArray(incomingRoutes)) {
             incomingRoutes.forEach((routeItem: Route) => {
-                this.routes.push(checkAndPush(routeItem));
+                this.routes.push(checkParams(routeItem));
             });
         }
 
         else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
-            this.routes.push(checkAndPush(incomingRoutes))
+            this.routes.push(checkParams(incomingRoutes))
         };
+        
         return this;
     };
 };
