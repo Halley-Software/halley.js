@@ -38,7 +38,7 @@ import { Request } from "./request"
 import { Reply } from "./response"
 
 //* Type Anotations
-import { type HalleyListener, type HalleyEnvironment } from "../types/halley.types"
+import type { HalleyListener, HalleyEnvironment } from "../types/halley.types"
 import * as RouterTypes from "../types/router.types";
 
 export class Halley {
@@ -89,6 +89,10 @@ export class Halley {
     /**
      * Push the params to an array with all the routes of the running project
      * 
+     * halley.get works over the get http verb / method.
+     * 
+     * Is commonly used to order data to the server
+     * 
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * 
@@ -98,24 +102,39 @@ export class Halley {
         ok(path);
         ok(handler);
 
-        if (path[0] !== "/") throw new TypeError("A route must start with '/'!")
+        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
         this.localRoutes.push({path: path, method: "GET", handler: handler});
     };
 
+    /**
+     * Push the params to an array with all the routes of the running project
+     * 
+     * Different from halley.get, post works over the post http verb / method.
+     * 
+     * Is commonly used to send data to the server
+     * 
+     * @param {string} path The path where the listener will execute
+     * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     */
+    public post(path: string, handler: HalleyListener) {
+
+        ok(path);
+        ok(handler);
+
+        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
+        
+        this.localRoutes.push({path: path, method: "POST", handler: handler});
+    };
 
     /**
      * Iterate over the localRoutes of the actual object
      * @param routeArray The array that contain the routes
      * @param index the pattern that want to search
-     * @returns 
+     * @returns The literal object that had matched with the index
      */
-    private iterateRoutes(routeArray: RouterTypes.Route[], index: string) {
-        const suitableObject = routeArray.find(match => {
-            return match.path === index
-        })
-
-        return suitableObject
+    private iterateRoutes(routeArray: RouterTypes.Route[], index: string, index2: string) {
+        return routeArray.find((matchRoute) => matchRoute.path === index && matchRoute.method === index2);
     }
 
     /**
@@ -124,15 +143,15 @@ export class Halley {
      * @param path the url of the route to match
      * 
      */
-    private makeSuitable(path: string | undefined) {
-        if (path !== undefined) {
-            const alreadyIterated = this.iterateRoutes(this.localRoutes, path)
-            if (alreadyIterated === undefined) this.response = (req, res) => {}
+    private makeSuitable(path: string | undefined, method: string | undefined) {
+        if (path && method !== undefined) {
+            const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
+            if (alreadyIterated === undefined) this.response = (req, res) => {res.end(`<h2>The route: ${path} dont exist</h2>`)};
             if (alreadyIterated !== undefined) {
                 this.response = alreadyIterated.handler
-            }
-        }
-    }
+            };
+        };
+    };
 
     /**
      * Ready method start your application and listen for requests on the indicated port at the constructor
@@ -153,10 +172,10 @@ export class Halley {
     public ready(message?: string, hostname?: string): http.Server {
         const server = http.createServer();
         server.on("request", (req: Request, res: Reply) => {
-            this.makeSuitable(req.url)
-            this.response.call(this, req, res)
-        })
-        console.info(message);
+            this.makeSuitable(req.url, req.method);
+            this.response.call(null, req, res);
+        });
+        typeof message === "string" ? console.info(message) : console.info(`Halley listening on port ${this.port}`);
         return server.listen(this.port, hostname = "0.0.0.0" || hostname);
     };
 };
