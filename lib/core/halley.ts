@@ -34,8 +34,8 @@ import { ok } from "node:assert";
  * Halley.JS dependencies
  */
 
-import { Request } from "./request"
-import { Reply } from "./response"
+import { Request } from "./request.js"
+import { Reply } from "./response.js"
 
 //* Type Anotations
 import type { HalleyListener, HalleyEnvironment } from "../types/halley.types"
@@ -64,11 +64,11 @@ export class Halley {
      * @property The property will change rely on the visited url
      */
 
-    private response: HalleyListener = (req, res) => {};
+    private response: HalleyListener = () => {};
 
     public settings = {
         xPoweredBy: "Halley.js"
-    }
+    };
 
     /**
      * 
@@ -97,7 +97,7 @@ export class Halley {
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * 
      */
-    public get(path: string, handler: HalleyListener) {
+    public get(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -105,6 +105,8 @@ export class Halley {
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
         this.localRoutes.push({path: path, method: "GET", handler: handler});
+
+        return this;
     };
 
     /**
@@ -117,7 +119,7 @@ export class Halley {
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
      */
-    public post(path: string, handler: HalleyListener) {
+    public post(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -125,6 +127,8 @@ export class Halley {
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
         
         this.localRoutes.push({path: path, method: "POST", handler: handler});
+
+        return this;
     };
 
     /**
@@ -135,21 +139,21 @@ export class Halley {
      */
     private iterateRoutes(routeArray: RouterTypes.Route[], index: string, index2: string) {
         return routeArray.find((matchRoute) => matchRoute.path === index && matchRoute.method === index2);
-    }
+    };
 
     /**
      * Matches the gived param with any object of localRoutes and attach the handler of the return object to this.response
      * 
      * @param path the url of the route to match
      * 
+     * @param method The http verb / method that will use the route
+     * 
      */
     private makeSuitable(path: string | undefined, method: string | undefined) {
         if (path && method !== undefined) {
             const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
             if (alreadyIterated === undefined) this.response = (req, res) => {res.end(`<h2>The route: ${path} dont exist</h2>`)};
-            if (alreadyIterated !== undefined) {
-                this.response = alreadyIterated.handler
-            };
+            else this.response = alreadyIterated.handler
         };
     };
 
@@ -172,8 +176,8 @@ export class Halley {
     public ready(message?: string, hostname?: string): http.Server {
         const server = http.createServer();
         server.on("request", (req: Request, res: Reply) => {
-            this.makeSuitable(req.url, req.method);
-            this.response.call(null, req, res);
+            this.makeSuitable(req.url, req.method)
+            this.response.call(null, req, res)
         });
         typeof message === "string" ? console.info(message) : console.info(`Halley listening on port ${this.port}`);
         return server.listen(this.port, hostname = "0.0.0.0" || hostname);
