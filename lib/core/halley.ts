@@ -26,65 +26,124 @@
  * Node.JS dependencies
  */
 
-import * as http from "node:http";
-
+import { Server, createServer, IncomingMessage, ServerResponse, ServerOptions } from "node:http";
 import { ok } from "node:assert";
 
 /**
  * Halley.JS dependencies
  */
 
-import { Request } from "./request.js"
-import { Reply } from "./response.js"
+import { HRouter } from "./router/halley.router.js";
+import { Request } from "./request.js";
+import { Reply } from "./reply.js";
 
 //* Type Anotations
-import type { HalleyListener, HalleyEnvironment } from "../types/halley.types"
-import * as RouterTypes from "../types/router.types";
+import type * as HalleyTypes from "../types/Halley.types";
+import * as RouterTypes from "../types/Router.types";
+
+const ServerOptions: ServerOptions = {
+    IncomingMessage: Request,
+    ServerResponse: Reply
+}
 
 export class Halley {
 
     /**
-     * @property The port is used to indicate to Halley where need to listen requests. Its a readonly property
+     * The port is used to indicate to Halley where need to listen requests. Its a readonly property
      * 
      */
     public readonly port: number;
 
     /**
      * The env indicate how is be developed an project
-     * 
      */
-    private env: HalleyEnvironment;
+    private env: HalleyTypes.HalleyEnvironment;
 
     /**
-     * @property Is an array that contain all the routes declared with get method
+     * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...)
      */
     private localRoutes: RouterTypes.Route[] = [];
 
     /**
-     * @property The property will change rely on the visited url
+     * @deprecated
+     * Append a router instance to the Halley object
      */
+    private router: HRouter;
 
-    private response: HalleyListener = () => {};
+    /**
+     * The response contains the callback function that will be executed and change rely on the visited route
+     */
+    private response: HalleyTypes.HalleyListener;
 
+    /**
+     * 
+     */
+    private errorResponse: HalleyTypes.HalleyListener;
+
+    /**
+     * The settings indicate extra information about the server provider
+     */
     public settings = {
         xPoweredBy: "Halley.js"
-    };
+    }
 
     /**
      * 
      * @param options Is the unique parameter for Halley class and it's an literal object.
      * 
-     * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the built-in Pino logger (Not implemented yet)
+     * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the Pino logger (Not implemented yet)
      * 
-     * @param options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
+     * @param {number} options.port Indicate to Halley where need to listen for entering routes. The default port is 5000
      * 
-     * @param options.port Indicate to Halley where need to listen for entering routes. The default port is 5000
+     * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      * 
      */
-    public constructor(options?: Partial<{port: number, env: HalleyEnvironment}>) {
+    public constructor(options?: Partial<{port: number, env: HalleyTypes.HalleyEnvironment}>) {
         !options?.port ? this.port = 5000 : this.port = options.port;
         !options?.env ? this.env = "development" : this.env = options.env;
-    };
+    } 
+
+    /**
+     * 
+     * Give the possibility of change the error page
+     * 
+     * @param handler The callback function sended to Halley when a route doesn't match
+     * @returns `this` object
+     */
+    public errorHandler(handler: HalleyTypes.HalleyListener): this {
+        
+        return this;
+    }
+
+    /**
+     * Iterate over the localRoutes of the actual object
+     * @param {RouterTypes.Route[]} routeArray The array that contain the routes
+     * @param {string} path The pattern that want to search
+     * @param {string} method The method of the incoming request
+     * @returns The literal object that had matched with the search patterns
+     */
+    private iterateRoutes(routeArray: RouterTypes.Route[], path: string, method: string) {
+        return routeArray.find((matchRoute: RouterTypes.Route) => matchRoute.path === path && matchRoute.method === method);
+    }
+
+    /**
+     * Matches the gived param with any object of localRoutes and attach the handler of the return object to this.response
+     * 
+     * @param {string} path The url of the route to match
+     * 
+     * @param {string} method The http verb / method that will use the route
+     */
+    private makeSuitable(path: string | undefined, method: string | undefined): void {
+        if (path && method) {
+            const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
+            if (!alreadyIterated) this.response = (req, res) => {
+                res.status(404)
+                res.setHeader("xPoweredBy", this.settings.xPoweredBy)
+                res.end(`<h2>The route: ${path} dont exist</h2>`)
+            }
+            else this.response = alreadyIterated.handler;
+        }
+    }
 
     /**
      * Push the params to an array with all the routes of the running project
@@ -95,9 +154,9 @@ export class Halley {
      * 
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
-     * 
+     * @returns `this` object
      */
-    public get(path: string, handler: HalleyListener): this {
+    public get(path: string, handler: HalleyTypes.HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -107,7 +166,7 @@ export class Halley {
         this.localRoutes.push({path: path, method: "GET", handler: handler});
 
         return this;
-    };
+    }
 
     /**
      * Push the params to an array with all the routes of the running project
@@ -118,8 +177,9 @@ export class Halley {
      * 
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     * @returns `this` object
      */
-    public post(path: string, handler: HalleyListener): this {
+    public post(path: string, handler: HalleyTypes.HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -129,33 +189,21 @@ export class Halley {
         this.localRoutes.push({path: path, method: "POST", handler: handler});
 
         return this;
-    };
+    }
 
     /**
-     * Iterate over the localRoutes of the actual object
-     * @param routeArray The array that contain the routes
-     * @param index the pattern that want to search
-     * @returns The literal object that had matched with the index
+     * @deprecated
+     * 
+     * Append the routes added with Halley Router to the Halley object
+     * 
+     * ! EXPERIMENTAL METHOD DO NOT USE FOR PRODUCTION
+     * 
+     * ! USE THE Halley Class (get, post, ...) METHODS INSTEAD
+     * @param router 
      */
-    private iterateRoutes(routeArray: RouterTypes.Route[], index: string, index2: string) {
-        return routeArray.find((matchRoute) => matchRoute.path === index && matchRoute.method === index2);
-    };
-
-    /**
-     * Matches the gived param with any object of localRoutes and attach the handler of the return object to this.response
-     * 
-     * @param path the url of the route to match
-     * 
-     * @param method The http verb / method that will use the route
-     * 
-     */
-    private makeSuitable(path: string | undefined, method: string | undefined) {
-        if (path && method !== undefined) {
-            const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
-            if (alreadyIterated === undefined) this.response = (req, res) => {res.end(`<h2>The route: ${path} dont exist</h2>`)};
-            else this.response = alreadyIterated.handler
-        };
-    };
+    public use(router: HRouter) {
+        null
+    }
 
     /**
      * Ready method start your application and listen for requests on the indicated port at the constructor
@@ -163,23 +211,30 @@ export class Halley {
      * Commonly some frameworks indicate the port at a method similar to ready (listen, start...).
      * In Halley.js is preferable indicate the port at the object constructor, so that the port is part of the class
      * 
+     * @param {string} message Optional parameter to show a custom message when the server is listening
+     * 
+     * @param {string} hostname Optional parameter to indicate what IP address must listen the server
+     * 
      * @example
      *      
-     *      // Import stuff
+     * // Import stuff
      *      
-     *      // Do stuff with that stuff
+     * // Do stuff with that stuff
      * 
-     *      halley.ready(`Halley listening on port ${halley.port}`)
+     * halley.ready(`Halley listening on port ${halley.port}`);
      * 
-     * @public
+     * // Now the server is litening for entering requests
      */
-    public ready(message?: string, hostname?: string): http.Server {
-        const server = http.createServer();
+    public ready(message?: string, hostname?: string): Server {
+        const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
-            this.makeSuitable(req.url, req.method)
-            this.response.call(null, req, res)
+
+            res.setHeader("xPoweredBy", this.settings.xPoweredBy);
+            this.makeSuitable(req.url, req.method);
+            this.response.call(null, req, res);
+            
         });
-        typeof message === "string" ? console.info(message) : console.info(`Halley listening on port ${this.port}`);
+        message ? console.info(message) : console.info(`Halley listening on port ${this.port}`);
         return server.listen(this.port, hostname = "0.0.0.0" || hostname);
-    };
-};
+    }
+}
