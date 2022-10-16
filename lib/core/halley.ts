@@ -38,8 +38,8 @@ import { Request } from "./request.js";
 import { Reply } from "./reply.js";
 
 //* Type Anotations
-import type * as HalleyTypes from "../types/Halley.types";
-import * as RouterTypes from "../types/Router.types";
+import type * as HalleyTypes from "../types/Halley.types.js";
+import * as RouterTypes from "../types/Router.types.js";
 
 const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
