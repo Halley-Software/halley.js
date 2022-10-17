@@ -2,14 +2,14 @@
   "name": "halley.http",
   "author": "Raxabi <future contact email>",
   "publisher": "Halley Software",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "contributors": [
     "Raxabi"
   ],
   "publishConfig": {
     "access": "public"
   },
-  "description": "The small, fast and easy Web Framework part of Laniakea Package Group, named Halley.http too. Inspired in Express",
+  "description": "The small, fast and easy Web Framework part of Laniakea Package Group. Inspired in Express",
   "keywords": [
     "framework",
     "web",
@@ -20,19 +20,20 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Raxabi/halley.js.git"
+    "url": "git+https://github.com/Halley-Software/halley.js.git"
   },
   "bugs": {
-    "url": "https://github.com/Raxabi/halley.js/issues"
+    "url": "https://github.com/Halley-Software/halley.js/issues"
   },
-  "homepage": "https://github.com/Raxabi/halley.js#readme",
+  "homepage": "https://github.com/Halley-Software/halley.js#readme",
   "license": "MIT",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist",
   "scripts": {
     "compile": "tsc -p tsconfig.json",
-    "test": "nodemon test/index.ts"
+    "test": "nodemon test/index.ts",
+    "execTest": "nodemon test/oddtest.ts"
   },
   "files": [
     "package.json",
