@@ -1,20 +1,22 @@
+/**
+ * Export the Halley project
+ */
+
 'use strict';
 
-// Halley Exports
-export { Halley } from "./core/halley";
-
+/**
+ * Core Componentes of Halley
+ */
+export { Halley } from "./core/halley.js";
+export { HRouter } from "./core/router/halley.router.js"
 export { Request } from "./core/request.js";
+export { Reply } from "./core/reply.js";
 
-export {} from "./core/response.js";
-
-// Halley Types Exports
-export type { HalleyEnvironment, HalleyListener } from "./types/halley.types.js";
-
-// Halley Router Types Exports
-export { Route, type RouteParam } from "./types/router.types.js";
-
-// Utils Exports
+/**
+ * Core types of Halley
+ */
+export type { HalleyEnvironment, HalleyListener } from "./types/Halley.types.js";
+export { Route } from "./types/Router.types.js";
+export {} from "./types/Request.types.js";
+export type { body } from "./types/Reply.types.js";
 export { HColors } from "./utils/halley.colors.js";
-
-// Utils Types Exports
-export type { HColorsSelection } from "./types/HColors.types.js";
