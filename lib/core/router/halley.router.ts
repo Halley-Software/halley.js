@@ -23,7 +23,7 @@ import * as RouterTypes from "../../types/Router.types";
  * Check if all the params was gived, if not, the running script will stop showing a message about it
  * Is responsible of convert the method to an uppercase string too, it makes that the method be suitable for NodeJS http.Server
  * @param {Route} objectRoute A route with path, http method and the respective handler for that route
- * @returns {Route} The same literalObject to push to the array that contains all the routes
+ * @returns The same literalObject to push to the array that contains all the routes
  */
 function checkParams(objectRoute: RouterTypes.Route): RouterTypes.Route {
     let { path, method, handler } = objectRoute;
@@ -51,7 +51,7 @@ export class HRouter {
      * 
      * @param {Array | Object} incomingRoutes An array or an literal object, if is an array, you can give many routes.
      * 
-     * @returns The router instance, 'this'
+     * @returns `this` object
      * 
      * Meanwhile, if is a literal object you must use the method as much as routes you want add.
      * 
@@ -84,9 +84,9 @@ export class HRouter {
         }
 
         else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
-            this.routes.push(checkParams(incomingRoutes))
+            this.routes.push(checkParams(incomingRoutes));
         }
 
-        return this
+        return this;
     };
 };
