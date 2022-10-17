@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * NodeJS dependencies
+ * Node.JS dependencies
  */
 import { IncomingMessage } from "node:http"
 
