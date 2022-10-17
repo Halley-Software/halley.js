@@ -12,12 +12,17 @@ import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http"
 
 import { readFile } from "node:fs/promises"
 
+/**
+ * Halley.JS dependencies
+ */
+
+// Type Anotations
 import type * as ReplyTypes from "../types/Reply.types";
 
-export class Reply<Request extends IncomingMessage = IncomingMessage> extends ServerResponse<Request> {
+export class Reply<Req extends IncomingMessage = IncomingMessage> extends ServerResponse<Req> {
     /**
-     * 
-     * @param statusReply The status Code
+     * Set a status code for the response
+     * @param {number} statusReply The status Code
      * @returns `this` object
      */
     status(statusReply: number): this {
@@ -28,8 +33,22 @@ export class Reply<Request extends IncomingMessage = IncomingMessage> extends Se
         return this;
     }
 
+    /**
+     * Send any data as a response 
+     * @param {ReplyTypes.body} body The body type is a type of types, that is, that it's a types wrapper
+     * 
+     * `body` can accept the follow primitive and non-primitive data types:
+     * 
+     * * `string` - Hello World!
+     * * `number` - 20
+     * * `boolean` - true
+     * * `object` - Can be an `Array`, literal object, `Date` or `Null`
+     * * `Buffer`
+     * 
+     * @returns `this` object
+     */
     public send(body: ReplyTypes.body): this {
-        this.end(body);
+        this.write(body);
         return this;
     }
 
