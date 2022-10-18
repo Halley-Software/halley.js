@@ -1,14 +1,22 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The first version of Halley.js only support get requests, and have the Node native request and response objects.
+## The 0.2.2 version of Halley has arrived!
 
-In addition Halley.js provide a built-in utility for colour text, useful when you print a message when the server is ready, for example:
-```ts
-halley.ready(halleyColors.print("cyan"))
-```
-Where the port number could be coloured of cyan, the unique color available for now
+> The 0.2.0 version existed, but a bug that shows the property `halley.port` as undefined was quickly fixed.<br>
+> This readme was updated too with this patch version
 
-> For more info, I recommend you see the README.md, here, in GitHub, see the [npm Halley.js registry](https://www.npmjs.com/package/halley.http) or when the official website be available
+> The version 0.2.1 had existed too, but just fix a bug when listen requests
 
-#### Ups I almost forgot say you that, the original name of halley.http is **halley.js**, but already exist a package with this name on the npm registry and its abandoned.
+# Changes
+### - Now Halley allow we to use **get**, **post**, **put** and **delete** requests / methods / verbs
+
+> The more basics http verbs used in a REST API
+
+### - The listening port can be assigned at the object constructor again
+
+### - The Request and Reply objects now can be used correctly through his corresponding classes
+
+> There's still miss some methods especially in the Reply class
+
+Ups I almost forgot say you that, the original name of halley.http is **halley.js**, but already exist a package with this name on the npm registry and its abandoned, but halley.http describes better the intentions of the framework.
