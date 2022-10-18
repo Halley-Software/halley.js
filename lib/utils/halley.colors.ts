@@ -1,3 +1,9 @@
+/**
+ * Halley colors is an add-on that allow you to colour a part of an string
+ */
+
+'use strict';
+
 import { HColorsSelection } from "../types/HColors.types"
 
 export class HColors {
@@ -8,8 +14,8 @@ export class HColors {
     /**
      * Print a message of some color
      * 
-     * @param originalMessage The original message, where a part of this message will be colored
-     * @param partToColor The part of the original message that will be colored
+     * @param originalMessage The `originalMessage`, where a part of this message will be colored
+     * @param partToColor The part of the `originalMessage` that will be colored
      */
     constructor(originalMessage: string, partToColor: string) {
         // Check if the originalMessage include the part to be colored
