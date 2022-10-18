@@ -48,7 +48,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * @returns `this` object
      */
     public send(body: ReplyTypes.body): this {
-        this.write(body);
+        this.end(body);
         return this;
     }
 
