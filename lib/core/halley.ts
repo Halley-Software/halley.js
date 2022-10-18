@@ -52,9 +52,9 @@ const ServerOptions: ServerOptions = {
 export class Halley {
 
     /**
-     * The port is used to indicate to Halley where need to listen requests. Its a readonly property
+     * The port is used to indicate to Halley where need to listen requests.
      */
-    public readonly port: number | undefined;
+    public readonly port: number;
 
     /**
      * The env indicate how is be developed an project
@@ -94,9 +94,9 @@ export class Halley {
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      */
     public constructor(options?: Partial<{port: number, env: HalleyTypes.HalleyEnvironment}>) {
-        !options?.port ? this.port = undefined : this.port = options.port;
+        if(options?.port) this.port = options.port
         !options?.env ? this.env = "development" : this.env = options.env;
-    } 
+    }
 
     /**
      * 
@@ -192,8 +192,8 @@ export class Halley {
      * Different from other halley methods, put works over the put http verb / method.
      * 
      * Is commonly used to update data to the server
-     * @param {string} path 
-     * @param {HalleyTypes.HalleyListener} handler 
+     * @param {string} path The path where the listener will execute
+     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public put(path: string, handler: HalleyTypes.HalleyListener): this {
@@ -203,7 +203,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "PUT", handler: handler})
+        this.localRoutes.push({path: path, method: "PUT", handler: handler});
 
         return this;
     }
@@ -213,9 +213,9 @@ export class Halley {
      * 
      * Different from other halley methods, delete works over the delete http verb / method.
      * 
-     * Is commonly used to send data to the server
-     * @param {string} path 
-     * @param {HalleyTypes.HalleyListener} handler 
+     * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
+     * @param {string} path The path where the listener will execute
+     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public delete(path: string, handler: HalleyTypes.HalleyListener): this {
@@ -241,11 +241,11 @@ export class Halley {
      * @param router 
      */
     public use(router: HRouter) {
-        null
+        null;
     }
 
     /**
-     * Ready method start your application and listen for requests on the indicated port at the constructor
+     * Ready method start your application and listen for requests on the indicated port at the constructor or as the first argument of `ready` method
      * 
      * @param {number} port Optional parameter to listen request
      * 
@@ -253,12 +253,12 @@ export class Halley {
      * 
      * @param {string} hostname Optional parameter to indicate what IP address must listen the server
      * 
-     * @returns {Server} Return a `server` instance 
+     * @returns {Server} Returns a `server` instance
      * 
      * Commonly some frameworks indicate the port at a method similar to ready (listen, start...).
-     * In Halley.js is preferable indicate the port at the object constructor, so that the port is part of the class.
      * 
-     * Anyway, if you want to add the listen port as a method argument you can do that.
+     * In Halley.js the listening port can be indicated at the object constructor, at the end, the `port` property will make equal to the port parameter.
+     * So the server will listen in the parameter and not in the property
      * 
      * Keep in mind that the port indicated in the constructor have more priority
      * 
@@ -268,16 +268,19 @@ export class Halley {
      *      
      * // Do stuff with that stuff
      * 
-     * halley.ready(`Halley listening on port ${halley.port}`);
+     * halley.ready(5000, `Halley listening on port ${halley.port}`);
      * 
      * // Now the server is litening for entering requests at indicated port
      * 
      */
     public ready(port?: number, message?: string, hostname?: string): Server {
 
-        if (!this.port && !port) {
-            throw new TypeError("You haven't indicated any port to listen requests, you must indicate at least one at the constructor of Halley class or as the first patameter of 'ready' method")
+        if (!port && !this.port) {
+            throw new TypeError("You haven't indicated any port to listen requests, you must indicate at least one at the constructor of Halley class or as the first patameter of 'ready' method");
         }
+
+        if (this.port && port) port = this.port;
+        else if (!port && this.port) port = this.port;
 
         const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
@@ -285,9 +288,9 @@ export class Halley {
             res.setHeader("xPoweredBy", this.settings.xPoweredBy);
             this.makeSuitable(req.url, req.method);
             this.response.call(null, req, res);
-            res.end();
+
         });
-        message ? console.info(message) : console.info(`Halley listening on port ${this.port ? this.port : port}`);
-        return server.listen(this.port ? this.port : port, hostname = "0.0.0.0" || hostname);
+        message ? console.info(message) : console.info(`Halley listening on port ${port}`);
+        return server.listen(port, hostname = "0.0.0.0" || hostname);
     }
 }
