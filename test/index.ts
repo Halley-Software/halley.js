@@ -1,15 +1,20 @@
 import { Halley } from "../lib/core/halley.js"
 import { HColors } from "../lib/utils/halley.colors.js"
 
+const PORT = 5000 || process.env.PORT;
+
 const halley = new Halley({
-    port: 5000
+    port: PORT,
+    env: "development"
 })
 
-const colors = new HColors("Server listening on port 5000", "5000")
+const HColor = new HColors(`Server listening on port ${PORT}`, "5000")
 
-halley.get("/", (req, res) => {
+halley.get("/", async (req, res) => {
+    await res.sendFile()
 })
 
-console.log(halley)
+halley.post("/", (req, res) => {
+})
 
-halley.ready(colors.print("cyan"))
+halley.ready(3000)
