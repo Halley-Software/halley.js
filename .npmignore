@@ -1,8 +1,8 @@
 node_modules/
 .gitignore
 Halley.JS.jpg
-package-lock.json
 test
+package-lock.json
 .eslintignore
 .eslintrc.json
 lib
