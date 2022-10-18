@@ -10,6 +10,7 @@
 
 import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
 
+import { isAbsolute } from "node:path"
 import { readFile } from "node:fs/promises";
 
 /**
@@ -58,8 +59,10 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * @returns `this` object
      */
     public async sendFile(filePath: string, encoding: BufferEncoding = "utf-8"): Promise<this> {
-        const fileAbsPath = new URL(filePath, import.meta.url);
-        const file = await readFile(fileAbsPath, encoding)
+        if (!isAbsolute(filePath)) {
+            throw new TypeError("The path must an absolute path!")
+        }
+        const file = await readFile(filePath, encoding)
         this.end(file);
         return this;
     }
