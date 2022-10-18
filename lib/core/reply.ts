@@ -8,9 +8,9 @@
  * NodeJS dependencies
  */
 
-import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http"
+import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
 
-import { readFile } from "node:fs/promises"
+import { readFile } from "node:fs/promises";
 
 /**
  * Halley.JS dependencies
@@ -36,6 +36,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
     /**
      * Send any data as a response 
      * @param {ReplyTypes.body} body The body type is a type of types, that is, that it's a types wrapper
+     * @returns `this` object
      * 
      * `body` can accept the follow primitive and non-primitive data types:
      * 
@@ -43,17 +44,23 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * * `number` - 20
      * * `boolean` - true
      * * `object` - Can be an `Array`, literal object, `Date` or `Null`
-     * * `Buffer`
-     * 
-     * @returns `this` object
+     * * `Buffer` - Buffer < 60 80 10 >
      */
     public send(body: ReplyTypes.body): this {
         this.end(body);
         return this;
     }
 
-    public sendFile(filePath: string): this {
-        readFile(filePath).then(some => {console.log(some)});
+    /**
+     * Send a file as a response
+     * @param {string} filePath Relative or absolute path of the file
+     * @param {BufferEncoding} encoding Set the encoding of the file
+     * @returns `this` object
+     */
+    public async sendFile(filePath: string, encoding: BufferEncoding = "utf-8"): Promise<this> {
+        const fileAbsPath = new URL(filePath, import.meta.url);
+        const file = await readFile(fileAbsPath, encoding)
+        this.end(file);
         return this;
     }
 };
