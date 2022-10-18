@@ -89,7 +89,7 @@ export class Halley {
      * 
      * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the Pino logger (Not implemented yet)
      * 
-     * @param {number} options.port Indicate to Halley where need to listen for entering routes. The default port is 5000
+     * @param {number} options.port Indicate to Halley where need to listen for entering routes. If isn't indicated at the constructor, Halley will listen on the first parameter in `ready` method
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      */
