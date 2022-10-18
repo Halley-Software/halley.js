@@ -13,7 +13,7 @@ import { HalleyListener } from "./Halley.types.js";
  * Repectively the types are:
  * * path - `string`
  * * method - `string`
- * * Function - `HalleyListeners`
+ * * Function - `HalleyListener`
  */
 
 export interface Route {
