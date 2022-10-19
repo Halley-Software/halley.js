@@ -14,8 +14,8 @@ export class HColors {
     /**
      * Print a message of some color
      * 
-     * @param originalMessage The `originalMessage`, where a part of this message will be colored
-     * @param partToColor The part of the `originalMessage` that will be colored
+     * @param {string} originalMessage The `originalMessage`, where a part of this message will be colored
+     * @param {string} partToColor The part of the `originalMessage` that will be colored
      */
     constructor(originalMessage: string, partToColor: string) {
         // Check if the originalMessage include the part to be colored
@@ -33,7 +33,7 @@ export class HColors {
 
     /**
      * 
-     * @param options 
+     * @param {HColorsSelection} options 
      * @returns The originalMessage printed with the color indicated
      */
     print(options: HColorsSelection) {
