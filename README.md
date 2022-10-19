@@ -1,25 +1,26 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 0.3.1 version of Halley has arrived!
-
-> This project looks like a framework increasingly day after day, version after version.
-
-> But I think that I need to work more on the versioning, commits and branches
+## The 0.4.0 version of Halley has arrived!
 
 # Changes
 
-### - The send method is now available to send different types as a response: strings, numbers, booleans, ...
+### - Now the port must be indicated necessarily at the Halley class constructor and then, indicated as the first parameter of the `ready` method
 
-### - The sendFile method is now available to send a file as a response
+An example: 
 
-### - The Request and Reply objects now can be used correctly through his corresponding classes
+```js
+import { Halley } from "halley.http"
 
-# Incoming features
+const halley = new Halley({
+    port: 5000,
+    environment: "development"
+})
 
-### - Requests methods incoming!
+// stuff
 
-### - res.json method incoming, its very useful to build a REST API
+halley.listen(halley.port)
+```
 
 # Notice that the Halley releases only will cover the minor and major versions
 
