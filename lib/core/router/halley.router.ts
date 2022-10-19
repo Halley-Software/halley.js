@@ -58,20 +58,20 @@ export class HRouter {
      * @example
      * // If the param gived is an Array:
      * router.add([{
-     *  path: "/",
-     *  method: "get",
-     *  requestHandler: ((req, res) => {
-     *      res.end("<h1>Hello World!</h1>")
-     *  })
+     *      path: "/",
+     *      method: "get",
+     *      requestHandler: ((req, res) => {
+     *          res.end("<h1>Hello World!</h1>")
+     *      })
      * }])
      * 
      * // If the gived param is an literal object:
      * router.add({
-     *  path: "/",
-     *  method: "get",
-     *  requestHandler: ((req, res) => {
-     *      res.end("<h1>Hello World!</h1>")
-     *  })
+     *      path: "/",
+     *      method: "get",
+     *      requestHandler: ((req, res) => {
+     *          res.end("<h1>Hello World!</h1>")
+     *      })
      * })
      * // With this way you only can add one route every time 'add' method is called
      */
