@@ -15,7 +15,7 @@
 /**
  * Halley.js use and take as reference some third-party modules, so here are the mentions about there :D
  * 
- * Halley.js borned as a inspiration in express, so, it had taken some things from it like: 
+ * Halley.js borned as a inspiration in express, so, it had taken some things from it like: The request and response classes
  * 
  * Halley.js use the pino logger https://github.com/pinojs/pino
  * 
@@ -94,8 +94,8 @@ export class Halley {
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      */
-    public constructor(options?: Partial<{port: number, env: HalleyTypes.HalleyEnvironment}>) {
-        if(options?.port) this.port = options.port
+    public constructor(options: {port: number, env?: HalleyTypes.HalleyEnvironment}) {
+        this.port = options.port;
         !options?.env ? this.env = "development" : this.env = options.env;
     }
 
@@ -248,7 +248,7 @@ export class Halley {
     /**
      * Ready method start your application and listen for requests on the indicated port at the constructor or as the first argument of `ready` method
      * 
-     * @param {number} port Optional parameter to listen request
+     * @param {number} port Necessary parameter to listen requests
      * 
      * @param {string} message Optional parameter to show a custom message when the server is listening
      * 
@@ -258,30 +258,27 @@ export class Halley {
      * 
      * Commonly some frameworks indicate the port at a method similar to ready (listen, start...).
      * 
-     * In Halley.js the listening port can be indicated at the object constructor, at the end, the `port` property will make equal to the port parameter.
-     * So the server will listen in the parameter and not in the property
-     * 
-     * Keep in mind that the port indicated in the constructor have more priority
+     * In Halley the port must be defined at the constructor, then indicate that port property as the firts parameter of `ready` method
      * 
      * @example
      *      
-     * // Import stuff
-     *      
-     * // Do stuff with that stuff
+     * Import { Halley } from "halley.http"
      * 
-     * halley.ready(5000, `Halley listening on port ${halley.port}`);
+     * const halley = new Halley({
+     *      port: 5000,
+     *      environment: "development"
+     * })
      * 
-     * // Now the server is litening for entering requests at indicated port
+     * halley.ready(halley.port, `Halley listening on port ${halley.port}`);
+     * 
+     * // Now the server is listening for entering requests at indicated port
      * 
      */
-    public ready(port?: number, message?: string, hostname?: string): Server {
+    public ready(port: number, message?: string, hostname?: string): Server {
 
-        if (!port && !this.port) {
-            throw new TypeError("You haven't indicated any port to listen requests, you must indicate at least one at the constructor of Halley class or as the first patameter of 'ready' method");
-        }
-
-        if (this.port && port) port = this.port;
-        else if (!port && this.port) port = this.port;
+        if (!this.port) {
+            throw new TypeError("You haven't indicated any port to listen requests, you must indicate the port at the constructor");
+        } else if (port !== this.port) throw new TypeError("The port must be the same that you indicated at Halley constructor");
 
         const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
