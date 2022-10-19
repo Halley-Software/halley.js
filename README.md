@@ -19,7 +19,7 @@ const halley = new Halley({
 
 // stuff
 
-halley.listen(halley.port)
+halley.ready(halley.port)
 ```
 
 # Notice that the Halley releases only will cover the minor and major versions
