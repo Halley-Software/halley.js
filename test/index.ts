@@ -8,13 +8,11 @@ const halley = new Halley({
     env: "development"
 })
 
-const HColor = new HColors(`Server listening on port ${PORT}`, "5000")
+const HColor = new HColors(`Server listening on port ${halley.port}`, "5000")
 
-halley.get("/", async (req, res) => {
-    await res.sendFile()
+halley.get("/", (req, res) => {
+    const { pathname: file } = new URL("index.html", import.meta.url)
+    res.sendFile(file, "utf-8")
 })
 
-halley.post("/", (req, res) => {
-})
-
-halley.ready(3000)
+halley.ready(halley.port, HColor.print("cyan"))
