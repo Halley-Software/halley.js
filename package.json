@@ -28,8 +28,9 @@
   "homepage": "https://github.com/Halley-Software/halley.js#readme",
   "license": "MIT",
   "type": "module",
-  "main": "dist/index.js",
-  "types": "dist/types",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": "./dist/index.js",
   "scripts": {
     "compile": "tsc -p tsconfig.json",
     "test": "nodemon test/index.ts",
