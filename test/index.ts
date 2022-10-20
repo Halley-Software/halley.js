@@ -1,5 +1,4 @@
-import { Halley } from "../lib/core/halley.js"
-import { HColors } from "../lib/utils/halley.colors.js"
+import { Halley, HColors } from "../dist/index.js"
 
 const PORT = 5000 || process.env.PORT;
 
