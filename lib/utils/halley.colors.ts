@@ -4,7 +4,7 @@
 
 'use strict';
 
-import { HColorsSelection } from "../types/HColors.types"
+export type HColorsSelection = "cyan";
 
 export class HColors {
 
