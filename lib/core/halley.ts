@@ -39,10 +39,19 @@ import { ok } from "node:assert";
 import { HRouter } from "./router/halley.router.js";
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
+import * as RouterTypes from "./router/halley.router.js";
 
-// Type Anotations
-import type * as HalleyTypes from "../types/Halley.types.js";
-import * as RouterTypes from "../types/Router.types.js";
+/**
+ * HalleyListener is a replace to the node:http RequestListener type.
+ * 
+ * With HalleyListener, it allow we to use customs Requests and Responses objects like in this case
+ */
+export type HalleyListener = (req: Request, res: Reply) => void;
+
+/**
+ * HalleyEnvironment indicate the environment of the project that is running
+ */
+export type HalleyEnvironment = "production" | "development";
 
 const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
@@ -59,7 +68,7 @@ export class Halley {
     /**
      * The env indicate how is be developed an project
      */
-    private env: HalleyTypes.HalleyEnvironment;
+    private env: HalleyEnvironment;
 
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...)
@@ -75,7 +84,7 @@ export class Halley {
     /**
      * The response contains the callback function that will be executed and change rely on the visited route
      */
-    private response: HalleyTypes.HalleyListener;
+    private response: HalleyListener;
 
     /**
      * The settings indicate extra information about the server provider
@@ -94,7 +103,7 @@ export class Halley {
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      */
-    public constructor(options: {port: number, env?: HalleyTypes.HalleyEnvironment}) {
+    public constructor(options: {port: number, env?: HalleyEnvironment}) {
         this.port = options.port;
         !options?.env ? this.env = "development" : this.env = options.env;
     }
@@ -106,7 +115,7 @@ export class Halley {
      * @param handler The callback function sended to Halley when a route doesn't match
      * @returns `this` object
      */
-    public errorHandler(handler: HalleyTypes.HalleyListener): this {
+    public errorHandler(handler: HalleyListener): this {
         
         return this;
     }
@@ -152,7 +161,7 @@ export class Halley {
      * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
-    public get(path: string, handler: HalleyTypes.HalleyListener): this {
+    public get(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -175,7 +184,7 @@ export class Halley {
      * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
-    public post(path: string, handler: HalleyTypes.HalleyListener): this {
+    public post(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -197,7 +206,7 @@ export class Halley {
      * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
-    public put(path: string, handler: HalleyTypes.HalleyListener): this {
+    public put(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);
@@ -219,7 +228,7 @@ export class Halley {
      * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
-    public delete(path: string, handler: HalleyTypes.HalleyListener): this {
+    public delete(path: string, handler: HalleyListener): this {
 
         ok(path);
         ok(handler);

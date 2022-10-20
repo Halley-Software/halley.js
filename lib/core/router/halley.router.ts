@@ -12,12 +12,23 @@
 //* Test Expressions
 import { ok } from "node:assert";
 
+import { HalleyListener } from "../halley.js";
+
 /**
- * Halley.JS Dependencies
+ * Route Defines the structure of a route.
+ * 
+ * It consumes a path, mathod and a handler:
+ * Repectively the types are:
+ * * path - `string`
+ * * method - `string`
+ * * Function - `HalleyListener`
  */
 
-//* Type Anotations
-import * as RouterTypes from "../../types/Router.types";
+export interface Route {
+    path: string;
+    method: string;
+    handler: HalleyListener;
+}
 
 /**
  * Check if all the params was gived, if not, the running script will stop showing a message about it
@@ -25,7 +36,7 @@ import * as RouterTypes from "../../types/Router.types";
  * @param {Route} objectRoute A route with path, http method and the respective handler for that route
  * @returns The same literalObject to push to the array that contains all the routes
  */
-function checkParams(objectRoute: RouterTypes.Route): RouterTypes.Route {
+function checkParams(objectRoute: Route): Route {
     let { path, method, handler } = objectRoute;
     // Check if any property wasn't gived
     ok(path);
@@ -43,7 +54,7 @@ export class HRouter {
     /**
      * An array that contain all the routes added with router.add method
      */
-    private routes: RouterTypes.Route[] = [];
+    private routes: Route[] = [];
 
     /**
      * 
@@ -75,10 +86,10 @@ export class HRouter {
      * })
      * // With this way you only can add one route every time 'add' method is called
      */
-    public add(incomingRoutes: RouterTypes.Route | RouterTypes.Route[]): this {
+    public add(incomingRoutes: Route | Route[]): this {
 
         if (Array.isArray(incomingRoutes)) {
-            incomingRoutes.forEach((routeItem: RouterTypes.Route) => {
+            incomingRoutes.forEach((routeItem: Route) => {
                 this.routes.push(checkParams(routeItem));
             });
         }

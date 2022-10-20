@@ -10,10 +10,11 @@
 import { IncomingMessage } from "node:http"
 
 export class Request extends IncomingMessage {
-
-    private getBody() {
-
+    
+    public get value() {
+        return
     }
+    
 
     public body: any;
 };
