@@ -34,7 +34,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send any data as a response 
-     * @param {ReplyTypes.body} body The body type is a type of types, that is, that it's a types wrapper
+     * @param {body} body The body type is a type of types, that is, that it's a types wrapper
      * @returns `this` object
      * 
      * `body` can accept the follow primitive and non-primitive data types:
@@ -61,7 +61,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
             throw new TypeError("The path must an absolute path!")
         }
         const file = await readFile(filePath, encoding)
-        this.end(file);
+        this.send(file);
         return this;
     }
 };
