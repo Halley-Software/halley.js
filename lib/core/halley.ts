@@ -158,7 +158,7 @@ export class Halley {
      * Is commonly used to request data to the server
      * 
      * @param {string} path The path where the listener will execute
-     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public get(path: string, handler: HalleyListener): this {
@@ -181,7 +181,7 @@ export class Halley {
      * Is commonly used to send data to the server
      * 
      * @param {string} path The path where the listener will execute
-     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public post(path: string, handler: HalleyListener): this {
@@ -203,7 +203,7 @@ export class Halley {
      * 
      * Is commonly used to update data to the server
      * @param {string} path The path where the listener will execute
-     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public put(path: string, handler: HalleyListener): this {
@@ -225,7 +225,7 @@ export class Halley {
      * 
      * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
      * @param {string} path The path where the listener will execute
-     * @param {HalleyTypes.HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} handler A callback function that will execute when the route is visited
      * @returns `this` object
      */
     public delete(path: string, handler: HalleyListener): this {
@@ -259,9 +259,9 @@ export class Halley {
      * 
      * @param {number} port Necessary parameter to listen requests
      * 
-     * @param {string} message Optional parameter to show a custom message when the server is listening
+     * @param {string} options.message Optional parameter to show a custom message when the server is listening
      * 
-     * @param {string} hostname Optional parameter to indicate what IP address must listen the server
+     * @param {string} options.hostname Optional parameter to indicate what IP address must listen the server
      * 
      * @returns {Server} Returns a `server` instance
      * 
@@ -278,16 +278,16 @@ export class Halley {
      *      environment: "development"
      * })
      * 
-     * halley.ready(halley.port, `Halley listening on port ${halley.port}`);
+     * halley.ready(halley.port);
      * 
      * // Now the server is listening for entering requests at indicated port
      * 
      */
-    public ready(port: number, message?: string, hostname?: string): Server {
+    public ready(port: number, options?: {message?: string, hostname?: string}): Server {
 
-        if (!this.port) {
-            throw new TypeError("You haven't indicated any port to listen requests, you must indicate the port at the constructor");
-        } else if (port !== this.port) throw new TypeError("The port must be the same that you indicated at Halley constructor");
+        if (port !== this.port) {
+            throw new TypeError("The port must be the same that you indicated at Halley constructor");
+        }
 
         const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
@@ -297,7 +297,7 @@ export class Halley {
             this.response.call(null, req, res);
 
         });
-        message ? console.info(message) : console.info(`Halley listening on port ${port}`);
-        return server.listen(port, hostname = "0.0.0.0" || hostname);
+        options?.message ? console.info(options?.message) : console.info(`Halley listening on port ${port}`);
+        return server.listen(port, options?.hostname ? options.hostname : "0.0.0.0");
     }
 }
