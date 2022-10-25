@@ -30,7 +30,6 @@
  */
 
 import { Server, createServer, ServerOptions } from "node:http";
-import { ok } from "node:assert";
 
 /**
  * Halley.JS dependencies
@@ -109,15 +108,14 @@ export class Halley {
     }
 
     /**
-     * 
      * Give the possibility of change the error page
      * 
      * @param handler The callback function sended to Halley when a route doesn't match
      * @returns `this` object
      */
-    public errorHandler(handler: HalleyListener): this {
-        
-        return this;
+    public errorHandler(handler: HalleyListener) {
+        this.response = handler;
+        return handler;
     }
 
     /**
@@ -127,7 +125,7 @@ export class Halley {
      * @param {string} method The method of the incoming request
      * @returns The literal object that had matched with the search patterns
      */
-    private iterateRoutes(routeArray: RouterTypes.Route[], path: string, method: string) {
+    private iterateRoutes(routeArray: RouterTypes.Route[], path: string, method: string): RouterTypes.Route | undefined {
         return routeArray.find((matchRoute: RouterTypes.Route) => matchRoute.path === path && matchRoute.method === method);
     }
 
@@ -141,12 +139,12 @@ export class Halley {
     private makeSuitable(path: string | undefined, method: string | undefined): void {
         if (path && method) {
             const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
-            if (!alreadyIterated) this.response = (req, res) => {
+            if (!this.errorHandler && !alreadyIterated) this.response = (req, res) => {
                 res.status(404)
                 res.setHeader("xPoweredBy", this.settings.xPoweredBy)
                 res.end(`<h2>The route: ${path} dont exist</h2>`)
             }
-            else this.response = alreadyIterated.handler;
+            else if (alreadyIterated) this.response = alreadyIterated.handler;
         }
     }
 
@@ -162,9 +160,6 @@ export class Halley {
      * @returns `this` object
      */
     public get(path: string, handler: HalleyListener): this {
-
-        ok(path);
-        ok(handler);
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
@@ -186,9 +181,6 @@ export class Halley {
      */
     public post(path: string, handler: HalleyListener): this {
 
-        ok(path);
-        ok(handler);
-
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
         
         this.localRoutes.push({path: path, method: "POST", handler: handler});
@@ -208,9 +200,6 @@ export class Halley {
      */
     public put(path: string, handler: HalleyListener): this {
 
-        ok(path);
-        ok(handler);
-
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
         this.localRoutes.push({path: path, method: "PUT", handler: handler});
@@ -229,9 +218,6 @@ export class Halley {
      * @returns `this` object
      */
     public delete(path: string, handler: HalleyListener): this {
-
-        ok(path);
-        ok(handler);
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
