@@ -75,12 +75,6 @@ export class Halley {
     private localRoutes: RouterTypes.Route[] = [];
 
     /**
-     * @deprecated
-     * Append a router instance to the Halley object
-     */
-    private router: HRouter;
-
-    /**
      * The response contains the callback function that will be executed and change rely on the visited route
      */
     private response: HalleyListener;
@@ -105,18 +99,7 @@ export class Halley {
     public constructor(options: {port: number, env?: HalleyEnvironment}) {
         this.port = options.port;
         !options?.env ? this.env = "development" : this.env = options.env;
-    }
-
-    /**
-     * Give the possibility of change the error page
-     * 
-     * @param handler The callback function sended to Halley when a route doesn't match
-     * @returns `this` object
-     */
-    public errorHandler(handler: HalleyListener) {
-        this.response = handler;
-        return handler;
-    }
+    }    
 
     /**
      * Iterate over the localRoutes of the actual object
@@ -139,12 +122,11 @@ export class Halley {
     private makeSuitable(path: string | undefined, method: string | undefined): void {
         if (path && method) {
             const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
-            if (!this.errorHandler && !alreadyIterated) this.response = (req, res) => {
+            if (!alreadyIterated) this.response = (req, res) => {
                 res.status(404)
-                res.setHeader("xPoweredBy", this.settings.xPoweredBy)
-                res.end(`<h2>The route: ${path} dont exist</h2>`)
+                res.send(`<h2>The route: '${path}' dont exist</h2>`)
             }
-            else if (alreadyIterated) this.response = alreadyIterated.handler;
+            else this.response = alreadyIterated.handler;
         }
     }
 
@@ -227,20 +209,6 @@ export class Halley {
     }
 
     /**
-     * @deprecated
-     * 
-     * Append the routes added with Halley Router to the Halley object
-     * 
-     * ! EXPERIMENTAL METHOD DO NOT USE FOR PRODUCTION
-     * 
-     * ! USE THE Halley Class METHODS INSTEAD (get, post, ...)
-     * @param router 
-     */
-    public use(router: HRouter) {
-        null;
-    }
-
-    /**
      * Ready method start your application and listen for requests on the indicated port at the constructor or as the first argument of `ready` method
      * 
      * @param {number} port Necessary parameter to listen requests
@@ -278,9 +246,8 @@ export class Halley {
         const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
 
-            res.setHeader("xPoweredBy", this.settings.xPoweredBy);
             this.makeSuitable(req.url, req.method);
-            this.response.call(null, req, res);
+            this.response.call(this, req, res);
 
         });
         options?.message ? console.info(options?.message) : console.info(`Halley listening on port ${port}`);
