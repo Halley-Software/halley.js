@@ -8,7 +8,7 @@ const halley = new Halley({
 })
 
 halley.get("/", (req, res) => {
-    res.send("<h1>Hello World!</h1>")
+    res.json("lol")
 })
 
 halley.ready(halley.port, {
