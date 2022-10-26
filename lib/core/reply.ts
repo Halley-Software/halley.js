@@ -58,9 +58,9 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      */
     public async sendFile(filePath: string, encoding: BufferEncoding = "utf-8"): Promise<this> {
         if (!isAbsolute(filePath)) {
-            throw new TypeError("The path must an absolute path!")
+            throw new TypeError("The path must an absolute path!");
         }
-        const file = await readFile(filePath, encoding)
+        const file = await readFile(filePath, encoding);
         this.send(file);
         return this;
     }
