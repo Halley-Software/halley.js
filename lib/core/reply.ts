@@ -64,4 +64,14 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
         this.send(file);
         return this;
     }
+
+    /**
+     * Send the response as a JSON object
+     * @param {object} body The content in JSON format
+     */
+    public json(body: any): this {
+        const jsonedBody = JSON.stringify(body);
+        this.send(jsonedBody);
+        return this;
+    }
 };
