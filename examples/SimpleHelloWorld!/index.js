@@ -1,5 +1,4 @@
-// Replace the import path by 'halley.http'
-import { Halley } from "../../dist/index.js"
+import { Halley } from "halley.http"
 
 const halley = new Halley({
     port: 5000
@@ -8,3 +7,5 @@ const halley = new Halley({
 halley.get("/", (req, res) => {
     res.send("<h1>Hello World!</h1>")
 })
+
+halley.ready(halley.port)
