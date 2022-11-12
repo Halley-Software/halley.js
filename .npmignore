@@ -6,3 +6,5 @@ package-lock.json
 .eslintignore
 .eslintrc.json
 lib
+lib/utils
+dist/utils
