@@ -9,9 +9,11 @@
  */
 
 import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
-
-import { isAbsolute } from "node:path"
+import { isAbsolute } from "node:path";
 import { readFile } from "node:fs/promises";
+
+// It is a good practise to import objects, classes, etc... from the globalThis object
+const { JSON } = globalThis;
 
 /**
  * A type wrapper for primitive and non-primitive data types
@@ -53,7 +55,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
     /**
      * Send a file as a response
      * @param {string} filePath Relative or absolute path of the file
-     * @param {BufferEncoding} encoding Set the encoding of the file
+     * @param {BufferEncoding} encoding Set the encoding of the file. Default is UTF-8
      * @returns `this` object
      */
     public async sendFile(filePath: string, encoding: BufferEncoding = "utf-8"): Promise<this> {
@@ -66,12 +68,12 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
     }
 
     /**
-     * Send the response as a JSON object
+     * Send the response as a JavaScript literal object
      * @param {object} body The content in JSON format
      */
-    public json(body: any): this {
-        const jsonedBody = JSON.stringify(body);
-        this.send(jsonedBody);
+    public json(body: {}): this {
+        this.setHeader("Content-Type", "application/json");
+        this.send(JSON.stringify(body));
         return this;
     }
 };
