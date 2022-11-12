@@ -1,4 +1,4 @@
-import { Halley } from "../dist/index.js"
+import { Halley } from "../lib/index.js"
 
 const PORT = 5000 || process.env.PORT;
 
@@ -8,9 +8,8 @@ const halley = new Halley({
 })
 
 halley.get("/", (req, res) => {
-    res.json("lol")
+    res.send("<h1>Hello World!</h1>")
+    req.
 })
 
-halley.ready(halley.port, {
-    hostname: "0.0.0.0"
-})
+halley.ready(halley.port)
