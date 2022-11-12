@@ -35,10 +35,8 @@ import { Server, createServer, ServerOptions } from "node:http";
  * Halley.JS dependencies
  */
 
-import { HRouter } from "./router/halley.router.js";
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
-import * as RouterTypes from "./router/halley.router.js";
 
 /**
  * HalleyListener is a replace to the node:http RequestListener type.
@@ -51,6 +49,24 @@ export type HalleyListener = (req: Request, res: Reply) => void;
  * HalleyEnvironment indicate the environment of the project that is running
  */
 export type HalleyEnvironment = "production" | "development";
+
+/**
+ * Route Defines the structure of a route.
+ * 
+ * It consumes a path, mathod and a handler:
+ * Repectively the types are:
+ * * path - `string`
+ * * method - `string`
+ * * Function - `HalleyListener`
+ * 
+ * !Moved temporarily to the Halley Class, while the Router class get purpose
+ */
+
+ export interface Route {
+    path: string;
+    method: string;
+    handler: HalleyListener;
+}
 
 const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
@@ -72,7 +88,7 @@ export class Halley {
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...)
      */
-    private localRoutes: RouterTypes.Route[] = [];
+    private localRoutes: Route[] = [];
 
     /**
      * The response contains the callback function that will be executed and change rely on the visited route
@@ -103,13 +119,13 @@ export class Halley {
 
     /**
      * Iterate over the localRoutes of the actual object
-     * @param {RouterTypes.Route[]} routeArray The array that contain the routes
+     * @param {Route[]} routeArray The array that contain the routes
      * @param {string} path The pattern that want to search
      * @param {string} method The method of the incoming request
      * @returns The literal object that had matched with the search patterns
      */
-    private iterateRoutes(routeArray: RouterTypes.Route[], path: string, method: string): RouterTypes.Route | undefined {
-        return routeArray.find((matchRoute: RouterTypes.Route) => matchRoute.path === path && matchRoute.method === method);
+    private iterateRoutes(routeArray: Route[], path: string, method: string): Route | undefined {
+        return routeArray.find((matchRoute: Route) => matchRoute.path === path && matchRoute.method === method);
     }
 
     /**
