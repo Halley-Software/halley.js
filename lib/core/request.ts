@@ -9,12 +9,12 @@
  */
 import { IncomingMessage } from "node:http"
 
+// It is a good practise to import objects, classes, etc... from the globalThis object
+const { Buffer } = globalThis;
+
 export class Request extends IncomingMessage {
     
-    public get value() {
+    public get body() {
         return
     }
-    
-
-    public body: any;
 };
