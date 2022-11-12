@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 0.5.0 version of Halley has arrived!
+## The 1.0.1 version of Halley has arrived!!!!
 
 Fast getting started:
 
@@ -24,9 +24,9 @@ halley.ready(halley.port)
 
 # Changes of version 0.5.0
 
-### - The json method has been added to the reply class
-### - Useless imports removed (for now) like, HColors, HRouter, etc...
-
+### - It fix's a bug that can break changes!
+ - That bug made that the methods of extended classes there wasn't availables
+### Updates the readme
 
 > The original name of halley.http is **halley.js**.
 >
