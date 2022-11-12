@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 0.4.1 version of Halley has arrived!
+## The 0.5.0 version of Halley has arrived!
 
 Fast getting started:
 
