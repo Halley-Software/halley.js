@@ -22,11 +22,14 @@ halley.ready(halley.port)
 
 ```
 
-# Changes of version 0.4.1
+# Changes of version 0.5.0
 
-### - The project now have less files
-### - Request types deleted, theren't nothing yet for the request object
+### - The json method has been added to the reply class
+### - Useless imports removed (for now) like, HColors, HRouter, etc...
 
-> ## The releases only will cover the Majors and Minors versions
 
-Ups I almost forgot say you that, the original name of halley.http is **halley.js**, but already exist a package with this name on the npm registry and its abandoned, but halley.http describes better the intentions of the framework.
+> The original name of halley.http is **halley.js**.
+>
+> But already exist a package with this name on the npm registry and its abandoned​.
+>
+> Anyway halley.http describes better the intentions of the framework.
