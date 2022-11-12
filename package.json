@@ -29,7 +29,7 @@
   "license": "MIT",
   "type": "module",
   "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "./dist/types/index.d.ts",
   "exports": "./dist/index.js",
   "scripts": {
     "compile": "tsc -p tsconfig.json",
