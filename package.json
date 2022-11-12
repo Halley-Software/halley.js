@@ -1,6 +1,6 @@
 {
   "name": "halley.http",
-  "author": "Raxabi <future contact email>",
+  "author": "Raxabi <openhalleysoftware@gmail.com>",
   "publisher": "Halley Software",
   "version": "0.4.1",
   "contributors": [
@@ -34,6 +34,7 @@
   "scripts": {
     "compile": "tsc -p tsconfig.json",
     "test": "nodemon test/index.ts",
+    "start": "node test/index.js", 
     "execTest": "nodemon test/oddtest.ts"
   },
   "files": [
