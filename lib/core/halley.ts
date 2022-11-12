@@ -62,7 +62,7 @@ export type HalleyEnvironment = "production" | "development";
  * !Moved temporarily to the Halley Class, while the Router class get purpose
  */
 
- export interface Route {
+export interface Route {
     path: string;
     method: string;
     handler: HalleyListener;
