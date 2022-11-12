@@ -139,8 +139,8 @@ export class Halley {
         if (path && method) {
             const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
             if (!alreadyIterated) this.response = (req, res) => {
-                res.status(404)
-                res.send(`<h2>The route: '${path}' dont exist</h2>`)
+                res.status(404);
+                res.send(`<h2>The route: '${path}' dont exist</h2>`);
             }
             else this.response = alreadyIterated.handler;
         }
@@ -266,7 +266,7 @@ export class Halley {
             this.response.call(this, req, res);
 
         });
-        options?.message ? console.info(options?.message) : console.info(`Halley listening on port ${port}`);
+        options?.message ? console.info(options.message) : console.info(`Halley listening on port ${port}`);
         return server.listen(port, options?.hostname ? options.hostname : "0.0.0.0");
     }
 }
