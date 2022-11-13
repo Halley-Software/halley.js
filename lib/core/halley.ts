@@ -30,6 +30,7 @@
  */
 
 import { Server, createServer, ServerOptions } from "node:http";
+import process from "node:process";
 
 /**
  * Halley.JS dependencies
@@ -83,7 +84,7 @@ export class Halley {
     /**
      * The env indicate how is be developed an project
      */
-    private env: HalleyEnvironment;
+    private env: HalleyEnvironment | string | undefined;
 
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...)
@@ -107,14 +108,25 @@ export class Halley {
      * 
      * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the Pino logger (Not implemented yet)
      * 
-     * @param {number} options.port Indicate to Halley where need to listen for entering routes. If isn't indicated at the constructor, Halley will listen on the first parameter indicated in `ready` method.
-     * (That refers to the listening port)
+     * @param {number} options.port Indicate to Halley where need to listen for entering routes. Necessary key parameter
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      */
-    public constructor(options: {port: number, env?: HalleyEnvironment}) {
+    public constructor(
+        options: {
+            port: number,
+            env?: HalleyEnvironment,
+            useNodeEnv?: boolean,
+        }
+    ) {
         this.port = options.port;
-        !options?.env ? this.env = "development" : this.env = options.env;
+        !options.env ? this.env = "development" : this.env = options.env;
+        if (options.useNodeEnv && !process.env.NODE_ENV) {
+            throw new TypeError("You have indicated Halley to use the 'NODE_ENV' environment variable. But it dont exists")
+        }
+        if (options.useNodeEnv && process.env.NODE_ENV) {
+            this.env = process.env.NODE_ENV;
+        }
     }    
 
     /**
@@ -227,7 +239,7 @@ export class Halley {
     /**
      * Ready method start your application and listen for requests on the indicated port at the constructor or as the first argument of `ready` method
      * 
-     * @param {number} port Necessary parameter to listen requests
+     * @param {number} port Necessary parameter to listen requests. It must be the same port that the indicated at the constructor
      * 
      * @param {string} options.message Optional parameter to show a custom message when the server is listening
      * 
