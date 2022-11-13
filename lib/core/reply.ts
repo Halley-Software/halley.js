@@ -54,7 +54,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send a file as a response
-     * @param {string} filePath Relative or absolute path of the file
+     * @param {string} filePath Absolute path of the file
      * @param {BufferEncoding} encoding Set the encoding of the file. Default is UTF-8
      * @returns `this` object
      */
@@ -68,12 +68,12 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
     }
 
     /**
-     * Send the response as a JavaScript literal object
-     * @param {object} body The content in JSON format
+     * Send the response as a JavaScript Object Notation (JSON)
+     * @param {object} body The content in 
      */
-    public json(body: {}): this {
+    public json(body: object): this {
         this.setHeader("Content-Type", "application/json");
-        this.send(JSON.stringify(body));
+        this.send(JSON.stringify(body, null, 4));
         return this;
     }
 };
