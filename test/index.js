@@ -1,13 +1,17 @@
-import { Halley } from "halley.http"
+import { Halley } from "../lib/index.js";
+import dotenv from "dotenv";
 
-const PORT = 5000 || process.env.PORT;
+dotenv.config();
 
-const halley = new Halley({
-    port: PORT,
+const app = new Halley({
+    port: 5000,
+    useNodeEnv: true
 })
 
-halley.get("/", (req, res) => {
-    res.
+app.get("/", (req, res) => {
+    res.send("<h1>Hello World!</h1>")
 })
 
-halley.ready(halley.port)
+console.log(app)
+
+app.ready(app.port)
