@@ -31,7 +31,10 @@ let contributors = {
                 },
                 Utils = {
                     "Halley Colors": [
-                        "HColors Class"
+                        "HColors Class",
+                        Types = [
+                            "HColorsSelection"
+                        ]
                     ]
                 }
             ]
