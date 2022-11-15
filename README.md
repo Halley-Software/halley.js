@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 1.0.1 version of Halley has arrived!!!!
+## The 1.2.0 version of Halley almost arrive!!!!
 
 Fast getting started:
 
@@ -22,11 +22,15 @@ halley.ready(halley.port)
 
 ```
 
-# Changes of version 0.5.0
+# Changes of version 1.2.0
 
-### - It fix's a bug that can break changes!
- - That bug made that the methods of extended classes there wasn't availables
-### Updates the readme
+### - Property req.body sucessfully implemented
+### - Method formAsObjectParser implemented
+ - It must be used obligatory inside a async function, if not, req.body will be empty
+
+# Another little changes
+ - res.json JSDoc corrected
+ - res.send JSDoc corrected
 
 > The original name of halley.http is **halley.js**.
 >
