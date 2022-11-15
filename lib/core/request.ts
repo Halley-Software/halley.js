@@ -8,22 +8,24 @@
  * Node.JS dependencies
  */
 import { IncomingMessage } from "node:http";
+const { Object } = globalThis;
 
-// It is a good practise to import objects, classes, etc... from the globalThis object
-const { Buffer } = globalThis;
+/**
+ * Halley.JS dependencies
+ */
+import { body } from "./reply.js"
 
 export class Request extends IncomingMessage {
-    
-    public body: Buffer[];
 
-    private getBodyInfo(): void {
-        let data: Buffer[] = [];
+    public body: body[] = [];
 
-        this.on("data", (chunk) => {
-            data.push(chunk);
-        }).on("end", () => {
-            Buffer.concat(data);
-        })
-        this.body = data;
+    public async formAsObjectParser() {
+        for await (const chunk of this) {
+            const data = Buffer.from(chunk).toString("utf-8");
+            const splitedData = data.split("&")
+            for (const segment of splitedData) {
+                this.body.push(Object.fromEntries([segment.split("=")]))
+            }
+        }
     }
 }
