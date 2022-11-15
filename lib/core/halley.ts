@@ -120,9 +120,11 @@ export class Halley {
         }
     ) {
         this.port = options.port;
-        !options.env ? this.env = "development" : this.env = options.env;
+        this.env = options.env ?? "development";
         if (options.useNodeEnv && !process.env.NODE_ENV) {
-            throw new TypeError("You have indicated Halley to use the 'NODE_ENV' environment variable. But it dont exists")
+            throw new TypeError(
+                "'useNodeEnv' property is indicated at Halley constructor to use the 'NODE_ENV' environment variable. But it dont exists. Perhaps you had not used dotenv?"
+            )
         }
         if (options.useNodeEnv && process.env.NODE_ENV) {
             this.env = process.env.NODE_ENV;
