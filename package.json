@@ -2,7 +2,7 @@
   "name": "halley.http",
   "author": "Raxabi <openhalleysoftware@gmail.com>",
   "publisher": "Halley Software",
-  "version": "1.0.1",
+  "version": "1.2.0-next-development",
   "contributors": [
     "Raxabi"
   ],
@@ -32,10 +32,8 @@
   "types": "./dist/index.d.ts",
   "exports": "./dist/index.js",
   "scripts": {
-    "compile": "tsc -p tsconfig.json",
-    "test": "nodemon test/index.ts",
-    "start": "node test/index.js", 
-    "execTest": "nodemon test/oddtest.ts"
+    "build": "tsc -p tsconfig.json",
+    "test": "nodemon test/index.ts"
   },
   "files": [
     "package.json",
@@ -45,6 +43,8 @@
     "LICENSE"
   ],
   "devDependencies": {
+    "@types/node": "^18.11.9",
+    "dotenv": "^16.0.3",
     "eslint": "8.23.1",
     "nodemon": "2.0.19",
     "ts-node": "10.9.1",
