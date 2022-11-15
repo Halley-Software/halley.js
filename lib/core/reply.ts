@@ -44,7 +44,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * * `string` - Hello World!
      * * `number` - 20
      * * `boolean` - true
-     * * `object` - Can be an `Array`, literal object, `Date` or `Null`
+     * * `object` - Can be an literal object, `Date` or `Null`
      * * `Buffer` - Buffer < 60 80 10 >
      */
     public send(body: body): this {
@@ -69,9 +69,9 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send the response as a JavaScript Object Notation (JSON)
-     * @param {object} body The content in 
+     * @param {body} body The content to convert to JSON and send to the response
      */
-    public json(body: object): this {
+    public json(body: body): this {
         this.setHeader("Content-Type", "application/json");
         this.send(JSON.stringify(body, null, 4));
         return this;
