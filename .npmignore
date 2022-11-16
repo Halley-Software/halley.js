@@ -5,8 +5,7 @@ test/
 package-lock.json
 .eslintignore
 .eslintrc.json
-lib
-lib/utils
-dist/utils
+lib/
+dist/utils/
 examples/
 old/
