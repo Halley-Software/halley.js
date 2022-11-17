@@ -20,12 +20,13 @@ export class Request extends IncomingMessage {
     public body: body[] = [];
 
     public async formAsObjectParser() {
+        let data: string, splitedData: string[];
         for await (const chunk of this) {
-            let data = Buffer.from(chunk).toString("utf-8");
+            data = Buffer.from(chunk).toString("utf-8");
             for (const str of data) {
-                if (str.includes("+")) data = data.replace("+", " ")
+                if (str.includes("+")) data = data.replace("+", " ");
             }
-            const splitedData = data.split("&")
+            splitedData = data.split("&")
             for (const segment of splitedData) {
                 this.body.push(Object.fromEntries([segment.split("=")]))
             }
