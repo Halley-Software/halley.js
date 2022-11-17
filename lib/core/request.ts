@@ -28,7 +28,7 @@ export class Request extends IncomingMessage {
             }
             splitedData = data.split("&")
             for (const segment of splitedData) {
-                this.body.push(Object.fromEntries([segment.split("=")]))
+                this.body.push(Object.fromEntries([segment.split("=")]));
             }
         }
     }
