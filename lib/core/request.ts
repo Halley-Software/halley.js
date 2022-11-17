@@ -13,7 +13,7 @@ const { Object } = globalThis;
 /**
  * Halley.JS dependencies
  */
-import { body } from "./reply.js"
+import { body } from "./reply.js";
 
 export class Request extends IncomingMessage {
 
