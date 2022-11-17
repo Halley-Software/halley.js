@@ -281,6 +281,6 @@ export class Halley {
 
         });
         options?.message ? console.info(options.message) : console.info(`Halley listening on port ${port}`);
-        return server.listen(port, options?.hostname ? options.hostname : "0.0.0.0");
+        return server.listen(port, options?.hostname ?? "0.0.0.0");
     }
 }
