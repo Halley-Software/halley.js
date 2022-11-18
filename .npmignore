@@ -1,11 +1,10 @@
 node_modules/
-.gitignore
-Halley.JS.jpg
+lib/
+dist/
 test/
-package-lock.json
+examples/
 .eslintignore
 .eslintrc.json
-lib/
-dist/utils/
-examples/
-old/
+.gitignore
+package-lock.json
+Halley.JS.jpg
