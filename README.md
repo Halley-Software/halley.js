@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 1.2.0 version of Halley almost arrive!!!!
+## The 1.1.0 version of Halley has arrived!!!!
 
 Fast getting started:
 
@@ -22,18 +22,29 @@ halley.ready(halley.port)
 
 ```
 
-# Changes of version 1.2.0
+# Changes of version 1.1.0
 
-### - Property req.body sucessfully implemented
-### - Method formAsObjectParser implemented
- - It must be used obligatory inside a async function, if not, req.body will be empty
+### - Request property of class req is now successfully implemented!
+ - An little example:
+ ```ts
+ // The callback function must be asynchronous to read the incoming ReadableStream
+ app.post("/", async (req, res) => {
+    await req.formAsObjectParser()
+    // 'formAsObjectParser' method must be explicit executed with the 'await' keyword
+    // if await is not indicated, the req.body will be empty
+    console.log(req.body)
+    res.send("Response sended")
+})
+ ```
+ Supposing that the data is sended through a HTML form.<br>
+ And that form contains a 'input' tag with a 'name' attribute:<br>
+ When the event send the data to the server, the output should be something like this:<br><br>
+ ```[ { Testing: 'req.body' } ]```<br><br>
+ Where the 'Testing' key of the object inside the array is the value of 'name' attribute indicated in the HTML form.<br>
+ And the value of the object inside the array is the value inserted at the 'input' element.
 
 # Another little changes
- - res.json JSDoc corrected
- - res.send JSDoc corrected
+ - hostname indicated at 'ready' method is now checked with a nullish operator
+ - environment state now is checked with a nullish operator
 
-> The original name of halley.http is **halley.js**.
->
-> But already exist a package with this name on the npm registry and its abandoned​.
->
-> Anyway halley.http describes better the intentions of the framework.
+## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
