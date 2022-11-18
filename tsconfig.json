@@ -104,5 +104,5 @@
     "esm": true
   },
   "include": ["lib"],
-  "exclude": ["test", "dist", ".eslint*", ".gitignore", ".npmignore"]
+  "exclude": ["test", "dist", ".eslint*", ".gitignore", ".npmignore", "lib/utils/"]
 }
