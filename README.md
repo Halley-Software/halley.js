@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 1.1.0 version of Halley has arrived!!!!
+## The 1.2.0 version of Halley has arrived!!!!
 
 Fast getting started:
 
@@ -22,29 +22,48 @@ halley.ready(halley.port)
 
 ```
 
-# Changes of version 1.1.0
+# Changes of version 1.2.0
 
-### - Request property of class req is now successfully implemented!
- - An little example:
- ```ts
- // The callback function must be asynchronous to read the incoming ReadableStream
- app.post("/", async (req, res) => {
-    await req.formAsObjectParser()
-    // 'formAsObjectParser' method must be explicit executed with the 'await' keyword
-    // if await is not indicated, the req.body will be empty
-    console.log(req.body)
-    res.send("Response sended")
-})
+### - req.rawBodyParser method was successfully implemented
+  ## ⚠️ This property is designed especially to use in react
+    - That's fine because in react, commonly you send the data using a native JavaScript fetch or axios methods
+    
+    - If you want, obviously, you can use it with another tool / framework, but is designed to be tidy to use with react
+ - A little example:
+
+ ```js
+ // api.frontend.js (frontend file)
+ const saveData = async (url: string, body: object) => await fetch(url, {
+    method: "POST",
+    body: JSON.stringify(body)
+ })
+
+ const [name, setName] = useState("")
+ const [description, setDescription] = useState("")
+ const [url, setUrl] = useState("")
+
+ // Then we send the data using the previous function
+ saveData("http://localhost:5000/save", {
+    // Where name, description and url are the state variables declared above
+    name, description, url
+ })
+ // In this example I suppose that I'm using a database that accepts a fields with the same names
+ // And a React component with the same props name
+
  ```
- Supposing that the data is sended through a HTML form.<br>
- And that form contains a 'input' tag with a 'name' attribute:<br>
- When the event send the data to the server, the output should be something like this:<br><br>
- ```[ { Testing: 'req.body' } ]```<br><br>
- Where the 'Testing' key of the object inside the array is the value of 'name' attribute indicated in the HTML form.<br>
- And the value of the object inside the array is the value inserted at the 'input' element.
 
-# Another little changes
- - hostname indicated at 'ready' method is now checked with a nullish operator
- - environment state now is checked with a nullish operator
+ ```ts
+ // app.controllers.ts (backend file)
+ // The callback function must be asynchronous to read the incoming ReadableStream
+ app.post("/save", async (req, res) => {
+    await req.rawBodyParser()
+    const bodyResult = JSON.parse(req.body)
+
+    // Do stuff with the bodyResult constant
+    console.log(bodyResult)
+ })
+ ```
+
+ - ## This example is fully completed in [this repository](https://github.com/Raxabi/halley.js-API-REST)
 
 ## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
