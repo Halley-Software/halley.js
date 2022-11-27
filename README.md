@@ -24,9 +24,34 @@ halley.ready(halley.port)
 
 # Changes of version 1.2.0
 
+### - req.formAsObjectParser method was successfully implemented
+  ## ⚠️ This property is designed especially to use in HTML forms (template engines or similars should be works nicely anyway)
+  - A litte example:
+  ```js
+     // The callback function must be asynchronous to read the incoming ReadableStream
+     app.post("/", async (req, res) => {
+       await req.formAsObjectParser()
+       // 'formAsObjectParser' method must be explicit executed with the 'await' keyword
+       // if await is not indicated, the req.body will be empty
+       console.log(req.body)
+       res.send("Response sended")
+     })
+  ```
+
+  Supposing that the data is sended through a HTML form.<br/>
+  And that form contains a 'input' tag with a 'name' attribute:<br/>
+  When the event send the data to the server, the output should be something like this:<br/>
+
+  ` [ { Testing: 'req.body' } ]`
+
+  Where the 'Testing' key of the object inside the array is the value of 'name' attribute indicated in
+  the HTML form.<br/>
+  And the value of the object inside the array is the value inserted at the 'input' element.
+
 ### - req.rawBodyParser method was successfully implemented
   ## ⚠️ This property is designed especially to use in react
     - That's fine because in react, commonly you send the data using a native JavaScript fetch or axios methods
+    - And the 'name' attributes in 'input' JSX elements are ineffective
     
     - If you want, obviously, you can use it with another tool / framework, but is designed to be tidy to use with react
  - A little example:
@@ -34,8 +59,8 @@ halley.ready(halley.port)
  ```js
  // api.frontend.js (frontend file)
  const saveData = async (url: string, body: object) => await fetch(url, {
-    method: "POST",
-    body: JSON.stringify(body)
+   method: "POST",
+   body: JSON.stringify(body)
  })
 
  const [name, setName] = useState("")
