@@ -52,7 +52,7 @@ export class Request extends IncomingMessage {
         
         for await (const chunk of this) {
             data = Buffer.from(chunk).toString("utf-8")
-            for await (const str of data) {
+            for (const str of data) {
                 if (str.includes("+")) data = data.replace("+", " ");
             }
             this.body.push(data)
