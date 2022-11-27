@@ -26,7 +26,10 @@ halley.ready(halley.port)
 
 ### - req.formAsObjectParser method was successfully implemented
   ## ⚠️ This property is designed especially to use in HTML forms (template engines or similars should be works nicely anyway)
-  - A litte example:
+
+    - If you want, obviously, you can use it with another tool / framework, but is designed to be tidy to use with HTML forms
+
+  ## - A litte example:
   ```js
      // The callback function must be asynchronous to read the incoming ReadableStream
      app.post("/", async (req, res) => {
@@ -49,12 +52,14 @@ halley.ready(halley.port)
   And the value of the object inside the array is the value inserted at the 'input' element.
 
 ### - req.rawBodyParser method was successfully implemented
-  ## ⚠️ This property is designed especially to use in react
-    - That's fine because in react, commonly you send the data using a native JavaScript fetch or axios methods
-    - And the 'name' attributes in 'input' JSX elements are ineffective
+  ## ⚠️ This property is designed especially to use in react, vue or another framework where you use fetch to send data to the frontend
+    - That's fine because in react, vue, etc..., commonly you send the data using a native JavaScript fetch or axios methods
+    - And the 'name' attributes in 'input' JSX elements are ineffective using fetch or similars
     
-    - If you want, obviously, you can use it with another tool / framework, but is designed to be tidy to use with react
- - A little example:
+    - If you want, obviously, you can use it with another tool / framework.
+    - But is designed to be tidy to use with frameworks where you use fetch as a way to send data
+
+  ## - A little example:
 
  ```js
  // api.frontend.js (frontend file)
@@ -89,6 +94,6 @@ halley.ready(halley.port)
  })
  ```
 
- - ## This example is fully completed in [this repository](https://github.com/Raxabi/halley.js-API-REST)
+ - ## This example is fully completed in [this WIP repository](https://github.com/Raxabi/halley.js-API-REST)
 
 ## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
