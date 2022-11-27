@@ -34,7 +34,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "nodemon test/index.ts",
-    "test.js": "nodemon test/index.js"
+    "test:js": "nodemon test/index.js"
   },
   "files": [
     "package.json",
