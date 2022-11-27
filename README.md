@@ -37,7 +37,7 @@ halley.ready(halley.port)
        // 'formAsObjectParser' method must be explicit executed with the 'await' keyword
        // if await is not indicated, the req.body will be empty
        console.log(req.body)
-       res.send("Response sended")
+       res.send("Response sent")
      })
   ```
 
@@ -90,7 +90,14 @@ halley.ready(halley.port)
     const bodyResult = JSON.parse(req.body)
 
     // Do stuff with the bodyResult constant
-    console.log(bodyResult)
+
+    // To show how it works:
+    // we has sent a object stringified with fetch
+    // Now in the backend we convert it back to a JavaScript literal object
+    // and finally we have the properties that we had used in react
+    console.log(bodyResult.name)
+    console.log(bodyResult.description)
+    console.log(bodyResult.url)
  })
  ```
 
