@@ -3,11 +3,10 @@
  - # latest's versions:
     - ## This versions only will be released when the package works fine with the new feature added, bug fixed, ...etc
 
- - # next's versions:
+ - # next.* versions:
     - ## This versions are the pre latest's version, this versions is like a 'beta' that works fine but still must be refined a few before be a latest version
  
  - # next-development || development.* versions:
- 
    - ## This versions is used to release new features or bug fixs when these changes are approximately to reach his original purpose
 
  - # development || development.* versions:
