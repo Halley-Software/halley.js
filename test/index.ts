@@ -3,10 +3,11 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-const { pathname: filename } = new URL("./", import.meta.url)
+const { pathname: __dirname } = new URL("./", import.meta.url)
+const filename = __dirname.replace("/", "");
 
 const app = new Halley({
-    port: 5000,
+    port: 4000,
     useNodeEnv: true
 })
 
@@ -15,7 +16,7 @@ app.get("/", (req, res) => {
 })
 
 app.post("/", async (req, res) => {
-    await req.formAsObjectParser()
+    await req.rawBodyParser()
     console.log(req.body)
     res.send("Peticion enviada")
 })
