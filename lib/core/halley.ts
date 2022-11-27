@@ -175,7 +175,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "GET", handler: handler});
+        this.localRoutes.push({path: path, method: "GET", handler});
 
         return this;
     }
@@ -195,7 +195,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
         
-        this.localRoutes.push({path: path, method: "POST", handler: handler});
+        this.localRoutes.push({path: path, method: "POST", handler});
 
         return this;
     }
@@ -214,7 +214,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "PUT", handler: handler});
+        this.localRoutes.push({path: path, method: "PUT", handler});
 
         return this;
     }
@@ -233,7 +233,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "DELETE", handler: handler});
+        this.localRoutes.push({path: path, method: "DELETE", handler});
 
         return this;
     }
