@@ -52,7 +52,7 @@ halley.ready(halley.port)
   And the value of the object inside the array is the value inserted at the 'input' element.
 
 ### - req.rawBodyParser method was successfully implemented
-  ## ⚠️ This property is designed especially to use in react, vue or another framework where you use fetch to send data to the frontend
+  ## ⚠️ This property is designed especially to use in react, vue or another framework where you use fetch to send data from the frontend
     - That's fine because in react, vue, etc..., commonly you send the data using a native JavaScript fetch or axios methods
     - And the 'name' attributes in 'input' JSX elements are ineffective using fetch or similars
     
