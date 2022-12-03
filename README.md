@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 1.2.0 version of Halley has arrived!!!!
+## The 1.2.1 version of Halley has arrived!!!!
 
 Fast getting started:
 
@@ -22,7 +22,7 @@ halley.ready(halley.port)
 
 ```
 
-# Changes of version 1.2.0
+# Changes of version 1.2.1
 
 ### - req.formAsObjectParser method was successfully implemented
   ## ⚠️ This property is designed especially to use in HTML forms (template engines or similars should be works nicely anyway)
