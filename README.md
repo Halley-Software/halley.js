@@ -62,7 +62,7 @@ halley.ready(halley.port)
   ## - A little example:
 
  ```js
- // api.frontend.js (frontend file)
+ // api.frontend.ts (frontend file)
  const saveData = async (url: string, body: object) => await fetch(url, {
    method: "POST",
    body: JSON.stringify(body)
