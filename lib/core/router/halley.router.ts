@@ -5,14 +5,9 @@
 
 'use strict';
 
-/**
- * Node.JS Dependencies
- */
-
-//* Test Expressions
-import { ok } from "node:assert";
-
 import { HalleyListener } from "../halley.js";
+
+type usableMethods = "GET" | "POST" | "PUT" | "DELETE"
 
 /**
  * Route Defines the structure of a route.
@@ -26,43 +21,24 @@ import { HalleyListener } from "../halley.js";
 
 export interface Route {
     path: string;
-    method: string;
+    method: usableMethods;
     handler: HalleyListener;
-}
-
-/**
- * Check if all the params was gived, if not, the running script will stop showing a message about it
- * Is responsible of convert the method to an uppercase string too, it makes that the method be suitable for NodeJS http.Server
- * @param {Route} objectRoute A route with path, http method and the respective handler for that route
- * @returns The same literalObject to push to the array that contains all the routes
- */
-function checkParams(objectRoute: Route): Route {
-    let { path, method, handler } = objectRoute;
-    // Check if any property wasn't gived
-    ok(path);
-    ok(method);
-    ok(handler);
-
-    // Covering problem that may exist
-    method = method.toUpperCase();
-
-    return objectRoute;
 }
 
 export class HRouter {
 
     /**
-     * An array that contain all the routes added with router.add method
+     * routerRoutes is an array that contains the routes added from the HalleyRouter
+     * 
+     * The routes contained in `routerRouter` will be added to the `halleyRoutes` array allocated in `Halley` class
      */
-    private routes: Route[] = [];
+    public readonly routerRoutes: Route[] = [];
 
     /**
      * 
      * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
      * 
      * @param {Array | Object} incomingRoutes An array or an literal object, if is an array, you can give many routes.
-     * 
-     * @returns `this` object
      * 
      * Meanwhile, if is a literal object you must use the method as much as routes you want add.
      * 
@@ -71,7 +47,7 @@ export class HRouter {
      * router.add([{
      *      path: "/",
      *      method: "get",
-     *      requestHandler: ((req, res) => {
+     *      handler: ((req, res) => {
      *          res.end("<h1>Hello World!</h1>")
      *      })
      * }])
@@ -80,24 +56,33 @@ export class HRouter {
      * router.add({
      *      path: "/",
      *      method: "get",
-     *      requestHandler: ((req, res) => {
+     *      handler: ((req, res) => {
      *          res.end("<h1>Hello World!</h1>")
      *      })
      * })
      * // With this way you only can add one route every time 'add' method is called
+     * 
+     * @returns `this` object
      */
     public add(incomingRoutes: Route | Route[]): this {
 
         if (Array.isArray(incomingRoutes)) {
             incomingRoutes.forEach((routeItem: Route) => {
-                this.routes.push(checkParams(routeItem));
+                this.routerRoutes.push({
+                    path: routeItem.path,
+                    method: routeItem.method,
+                    handler: routeItem.handler
+                });
             });
         }
 
         else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
-            this.routes.push(checkParams(incomingRoutes));
+            this.routerRoutes.push({
+                path: incomingRoutes.path,
+                method: incomingRoutes.method,
+                handler: incomingRoutes.handler
+            });
         }
-
         return this;
-    };
-};
+    }
+}
