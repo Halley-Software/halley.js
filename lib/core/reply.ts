@@ -37,7 +37,10 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send any data as a response 
-     * @param {body} body The body type is a type of types, that is, that it's a types wrapper
+     * @param {body} body 
+     * The body type is a type of types, including:
+     * 
+     * literal objets, numbers, strings...
      * @returns `this` object
      * 
      * `body` can accept the follow primitive and non-primitive data types:
