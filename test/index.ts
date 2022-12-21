@@ -1,26 +1,21 @@
-import { Halley } from "../lib/index.js";
-import dotenv from "dotenv";
+import { Halley } from "../lib/index.js"
+import dotenv from "dotenv"
+import { router } from "./routes/main.js"
 
-dotenv.config();
+dotenv.config()
 
 const { pathname: __dirname } = new URL("./", import.meta.url)
-const filename = __dirname.replace("/", "");
+const filename = __dirname.replace("/", "")
 
 const app = new Halley({
-    port: 4000,
-    useNodeEnv: true
+  port: 4000,
+  useNodeEnv: true
 })
 
-app.get("/", (req, res) => {
-    res.sendFile(filename + "/index.html")
-})
+app.use(router)
 
-app.post("/", async (req, res) => {
-    await req.rawBodyParser()
-    console.log(req.body)
-    res.send("Peticion enviada")
-})
+app.serveStatic(filename + "public")
 
 app.ready(app.port, {
-    hostname: "0.0.0.0"
+  hostname: "0.0.0.0",
 })
