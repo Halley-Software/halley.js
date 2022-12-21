@@ -30,7 +30,10 @@
  */
 
 import { Server, createServer, ServerOptions } from "node:http";
+import path from "node:path";
+import fs from "node:fs/promises";
 import process from "node:process";
+import { debug } from "node:console";
 
 /**
  * Halley.JS dependencies
@@ -38,11 +41,13 @@ import process from "node:process";
 
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
+import { HRouter, Route } from "./router/halley.router.js";
+import { FileError } from "../errors/FileErrors.js"
 
 /**
  * HalleyListener is a replace to the node:http RequestListener type.
  * 
- * With HalleyListener, it allow we to use customs Requests and Responses objects like in this case
+ * With HalleyListener, it allow we to use customs Requests and Responses objects like in the Halley case
  */
 export type HalleyListener = (req: Request, res: Reply) => void;
 
@@ -51,28 +56,12 @@ export type HalleyListener = (req: Request, res: Reply) => void;
  */
 export type HalleyEnvironment = "production" | "development";
 
-/**
- * Route Defines the structure of a route.
- * 
- * It consumes a path, mathod and a handler:
- * Repectively the types are:
- * * path - `string`
- * * method - `string`
- * * Function - `HalleyListener`
- * 
- * !Moved temporarily to the Halley Class, while the Router class get purpose
- */
-
-export interface Route {
-    path: string;
-    method: string;
-    handler: HalleyListener;
-}
-
 const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
     ServerResponse: Reply
 }
+
+const { Object } = globalThis;
 
 export class Halley {
 
@@ -87,20 +76,20 @@ export class Halley {
     private env: HalleyEnvironment | string | undefined;
 
     /**
-     * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...)
+     * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
      */
-    private localRoutes: Route[] = [];
+    private halleyRoutes: Route[] = [];
 
     /**
      * The response contains the callback function that will be executed and change rely on the visited route
      */
-    private response: HalleyListener;
+    private _response: HalleyListener;
 
     /**
      * The settings indicate extra information about the server provider
      */
     private settings = {
-        xPoweredBy: "Halley.js"
+        "x-Powered-By": "Halley.js",
     }
 
     /**
@@ -151,12 +140,22 @@ export class Halley {
      */
     private makeSuitable(path: string | undefined, method: string | undefined): void {
         if (path && method) {
-            const alreadyIterated = this.iterateRoutes(this.localRoutes, path, method);
-            if (!alreadyIterated) this.response = (req, res) => {
+            const alreadyIterated = this.iterateRoutes(this.halleyRoutes, path, method);
+            if (!alreadyIterated) this._response = (req, res) => {
                 res.status(404);
-                res.send(`<h2>The route: '${path}' dont exist</h2>`);
+                res.send(`<h2>The route: '${path}' dont exists</h2>`);
             }
-            else this.response = alreadyIterated.handler;
+            else this._response = alreadyIterated.handler;
+        }
+    }
+
+    /**
+     * Copy an object and is embedded into the `Halley` class
+     * @param {object} appendedObject The source object that will be embedded into `Halley` class
+     */
+    public use(appendedObject: object | Function) {
+        if (appendedObject instanceof HRouter) {
+            Object.assign(this.halleyRoutes, appendedObject.routerRoutes);
         }
     }
 
@@ -175,7 +174,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "GET", handler});
+        this.halleyRoutes.push({path, method: "GET", handler});
 
         return this;
     }
@@ -195,7 +194,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
         
-        this.localRoutes.push({path: path, method: "POST", handler});
+        this.halleyRoutes.push({path, method: "POST", handler});
 
         return this;
     }
@@ -214,7 +213,7 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "PUT", handler});
+        this.halleyRoutes.push({path, method: "PUT", handler});
 
         return this;
     }
@@ -233,9 +232,44 @@ export class Halley {
 
         if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
 
-        this.localRoutes.push({path: path, method: "DELETE", handler});
+        this.halleyRoutes.push({path, method: "DELETE", handler});
 
         return this;
+    }
+
+    /**
+     * ! Experimental Method
+     * 
+     * Add routes of the specefied file
+     */
+    public async serveStatic(dirPath: string) {
+        const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
+        if (!path.isAbsolute) {
+            throw new FileError("The path must an absolute path!", "PATH_IS_NOT_ABSOLUTE");
+        }
+        if (!fileOrDirectoryArgument) {
+            throw new FileError("The path must be a directory!", "ARGUMENT_IS_NOT_A_DIR")
+        }
+
+        const dirItems = await fs.readdir(dirPath)
+
+        dirItems.forEach(item => {
+            const uniqueRoute = `/${item}`
+            this.get(`/${item}`, (req, res) => {
+                if(item.match(/.\.css$/)) {
+                    res.setHeader("Content-Type", "text/css")
+                    res.sendFile(`${dirPath}/${uniqueRoute}`)
+                }
+                if(item.match(/.\.js$/)) {
+                    res.setHeader("Content-Type", "text/javascript")
+                    res.sendFile(`${dirPath}/${uniqueRoute}`)
+                }
+                else {
+                    res.setHeader("Content-Type", "text/plain")
+                    res.sendFile(`${dirPath}/${uniqueRoute}`)
+                }
+            })
+        })
     }
 
     /**
@@ -277,7 +311,7 @@ export class Halley {
         server.on("request", (req: Request, res: Reply) => {
 
             this.makeSuitable(req.url, req.method);
-            this.response.call(this, req, res);
+            this._response.call(this, req, res);
 
         });
         options?.message ? console.info(options.message) : console.info(`Halley listening on port ${port}`);
