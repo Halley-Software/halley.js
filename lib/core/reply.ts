@@ -15,6 +15,7 @@ import { readFile } from "node:fs/promises";
 // It is a good practise to import objects, classes, etc... from the globalThis object
 const { JSON } = globalThis;
 
+import { FileError } from "../errors/FileErrors.js"
 /**
  * A type wrapper for primitive and non-primitive data types
  */
