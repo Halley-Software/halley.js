@@ -89,7 +89,7 @@ export class Halley {
      * The settings indicate extra information about the server provider
      */
     private settings = {
-        "x-Powered-By": "Halley.js",
+        "x-Powered-By": "Halley.js"
     }
 
     /**
@@ -151,14 +151,14 @@ export class Halley {
 
     /**
      * Copy an object and is embedded into the `Halley` class
-     * @param {object} appendedObject The source object that will be embedded into `Halley` class
+     * @param {object | Function} appendedObject The source object that will be embedded into `Halley` class
      */
     public use(appendedObject: object | Function) {
         if (appendedObject instanceof HRouter) {
             Object.assign(this.halleyRoutes, appendedObject.routerRoutes);
         }
-    }
-
+    }   
+    
     /**
      * Push the params to an array with all the routes of the running project
      * 
