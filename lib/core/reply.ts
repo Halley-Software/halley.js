@@ -27,7 +27,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * @returns `this` object
      */
     status(statusReply: number): this {
-        if (!STATUS_CODES[statusReply]) throw new Error(
+        if (!STATUS_CODES[statusReply]) throw new TypeError(
             `The status code ${statusReply} dont exist in the object 'STATUS_CODES', Provided from Node.js`
         )
         this.statusCode = statusReply;
