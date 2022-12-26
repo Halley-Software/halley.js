@@ -180,12 +180,16 @@ export class Halley {
     }
 
     /**
+     * ! Experimental Method
+     * 
      * Copy an object and is embedded into the `Halley` class
-     * @param {object | Function} appendedObject The source object that will be embedded into `Halley` class
+     * @param {Route[] | Middleware} appendedObject The source object that will be embedded into `Halley` class
      */
-    public use(appendedObject: object | Function) {
-        if (appendedObject instanceof HRouter) {
-            Object.assign(this.halleyRoutes, appendedObject.routerRoutes);
+    public use(appendedObject: Route[] | Middleware) {
+        if (typeof appendedObject === "object") {
+            Object.assign(this.extras, appendedObject)
+        } else if (typeof appendedObject === "function") {
+            this.middlewares.push(appendedObject)
         }
     }   
     
