@@ -274,7 +274,8 @@ export class Halley {
     /**
      * ! Experimental Method
      * 
-     * Add routes of the specefied file
+     * Add routes for each file inside the indicated directory as argument. So it can be accessed
+     * If there are another directories, the files inside them will be readed too^M
      */
     public async serveStatic(dirPath: string) {
         const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
@@ -287,23 +288,27 @@ export class Halley {
 
         const dirItems = await fs.readdir(dirPath)
 
-        dirItems.forEach(item => {
-            const uniqueRoute = `/${item}`
-            this.get(`/${item}`, (req, res) => {
-                if(item.match(/.\.css$/)) {
-                    res.setHeader("Content-Type", "text/css")
-                    res.sendFile(`${dirPath}/${uniqueRoute}`)
-                }
-                if(item.match(/.\.js$/)) {
-                    res.setHeader("Content-Type", "text/javascript")
-                    res.sendFile(`${dirPath}/${uniqueRoute}`)
-                }
-                else {
-                    res.setHeader("Content-Type", "text/plain")
-                    res.sendFile(`${dirPath}/${uniqueRoute}`)
+        for (const item of dirItems) {
+            const itemType = await fs.lstat(`${dirPath}/${item}`)
+            if (itemType.isDirectory()) {/**/}
+
+            this.get(`${item}`, (req, res) => {
+                switch (true) {
+                    case /.\.css$/.test(item):
+                        res.setHeader("Content-Type", "text/css")
+                        res.sendFile(`${dirPath}/${item}`)
+                    break;
+                    case /.\.js$/.test(item):
+                        res.setHeader("Content-Type", "text/js")
+                        res.sendFile(`${dirPath}/${item}`)
+                    break;
+                    default:
+                        res.setHeader("Content-Type", "text/plain")
+                        res.sendFile(`${dirPath}/${item}`)
+                    break;
                 }
             })
-        })
+        }
     }
 
     /**
