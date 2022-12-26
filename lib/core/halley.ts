@@ -163,11 +163,19 @@ export class Halley {
     private makeSuitable(path: string | undefined, method: string | undefined): void {
         if (path && method) {
             const alreadyIterated = this.iterateRoutes(this.halleyRoutes, path, method);
-            if (!alreadyIterated) this._response = (req, res) => {
-                res.status(404);
-                res.send(`<h2>The route: '${path}' dont exists</h2>`);
+            if (!alreadyIterated) {
+                this._response = (req, res) => {
+                    res.status(404);
+                    res.send(`<h2>The route: '${path}' dont exists</h2>`);
+                }
+            } else if (alreadyIterated && this.middlewares.length > 0) {
+                this.middlewares.forEach((callback: HalleyListener) => {
+                    callback(this.appRequest, this.appReply)
+                });
+                this._response = alreadyIterated.handler
+            } else {
+                this._response = alreadyIterated.handler;
             }
-            else this._response = alreadyIterated.handler;
         }
     }
 
