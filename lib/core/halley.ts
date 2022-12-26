@@ -349,6 +349,9 @@ export class Halley {
         const server = createServer(ServerOptions);
         server.on("request", (req: Request, res: Reply) => {
 
+            this.appRequest = req;
+            this.appReply = res;
+
             this.makeSuitable(req.url, req.method);
             this._response.call(this, req, res);
 
