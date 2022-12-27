@@ -112,8 +112,6 @@ export class Halley {
         "x-Powered-By": "Halley.js"
     }
 
-    private extras = {}
-
     /**
      * @param options Is the unique parameter for Halley class and it's an literal object.
      * 
