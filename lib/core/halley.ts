@@ -33,7 +33,6 @@ import { Server, createServer, ServerOptions } from "node:http";
 import path from "node:path";
 import fs from "node:fs/promises";
 import process from "node:process";
-import { debug } from "node:console";
 
 /**
  * Halley.JS dependencies
@@ -41,8 +40,9 @@ import { debug } from "node:console";
 
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
-import { HRouter, Route } from "./router/halley.router.js";
-import { FileError } from "../errors/FileErrors.js"
+import { Route } from "./router/halley.router.js";
+import { FileError } from "../errors/FileErrors.js";
+import { ROUTE_NAME_ERROR } from "../errors/RouteErrors.js";
 
 /**
  * HalleyListener is a replace to the node:http RequestListener type.
