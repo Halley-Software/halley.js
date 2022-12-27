@@ -86,6 +86,11 @@ export class Halley {
     private routeStack: Route[] = [];
 
     /**
+     * Contains the middlewares passed to the Halley class using the 'use' method
+     */
+    private middlewares: HalleyListener[] = [];
+
+    /**
      * It is equaled to the entering request for manage different aspects like piped data
      */
     private appRequest: Request;
@@ -94,11 +99,6 @@ export class Halley {
      * It is equaled to the outgoing response for manage different aspects like outgoing headers
      */
     private appReply: Reply;
-
-    /**
-     * Contains the middlewares passed to the Halley class using the 'use' method
-     */
-    private middlewares: Middleware[] = [];
 
     /**
      * The response contains the callback function that will be executed and change rely on the visited route
