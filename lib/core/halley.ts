@@ -83,7 +83,7 @@ export class Halley {
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
      */
-    private halleyRoutes: Route[] = [];
+    private routeStack: Route[] = [];
 
     /**
      * It is equaled to the entering request for manage different aspects like piped data
