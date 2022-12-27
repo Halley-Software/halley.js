@@ -120,6 +120,8 @@ export class Halley {
      * @param {number} options.port Indicate to Halley where need to listen for entering routes. Necessary key parameter
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
+     * 
+     * @param {boolean} options.useNodeEnv If this option is indicated, a environment variable must be available so that Node.js can read
      */
     public constructor(
         options: {
@@ -133,7 +135,7 @@ export class Halley {
         if (options.useNodeEnv && !process.env.NODE_ENV) {
             throw new TypeError(
                 "'useNodeEnv' property is indicated at Halley constructor to use the 'NODE_ENV' environment variable. But it dont exists. Perhaps you had not used dotenv?"
-            )
+            );
         }
         if (options.useNodeEnv && process.env.NODE_ENV) {
             this.env = process.env.NODE_ENV;
