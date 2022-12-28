@@ -34,6 +34,9 @@ import path from "node:path";
 import fs from "node:fs/promises";
 import process from "node:process";
 
+// JavaScript good practice
+const { Object } = globalThis;
+
 /**
  * Halley.JS dependencies
  */
@@ -65,8 +68,6 @@ const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
     ServerResponse: Reply
 }
-
-const { Object } = globalThis;
 
 export class Halley {
 
