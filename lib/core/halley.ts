@@ -44,8 +44,8 @@ const { Object } = globalThis;
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
 import { Route } from "./router/halley.router.js";
-import { FileError } from "../errors/FileErrors.js";
-import { ROUTE_NAME_ERROR } from "../errors/RouteErrors.js";
+import { HALLEY_PATH_IS_NOT_ABSOLUTE, HALLEY_ARGUMENT_IS_NOT_A_DIR } from "../errors/FileErrors.js";
+import { HALLEY_ROUTE_DO_NOT_START_WITH_SLASH } from "../errors/RouteErrors.js";
 
 /**
  * HalleyListener is a replace to the node:http RequestListener type.
