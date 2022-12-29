@@ -139,14 +139,13 @@ export class Halley {
     }    
 
     /**
-     * Iterate over the localRoutes of the actual object
-     * @param {Route[]} routeArray The array that contain the routes
+     * Iterate over the localRoutes of the actual Halley object
      * @param {string} path The pattern that want to search
      * @param {string} method The method of the incoming request
      * @returns The literal object that had matched with the search patterns
      */
-    private iterateRoutes(routeArray: Route[], path: string, method: string): Route | undefined {
-        return routeArray.find((matchRoute: Route) => matchRoute.path === path && matchRoute.method === method);
+    private iterateRoutes(path: string, method: string): Route | undefined {
+        return this.routeStack.find((matchRoute: Route) => matchRoute.path === path && matchRoute.method === method);
     }
 
     /**
@@ -158,7 +157,7 @@ export class Halley {
      */
     private makeSuitable(path: string | undefined, method: string | undefined): void {
         if (path && method) {
-            const alreadyIterated = this.iterateRoutes(this.halleyRoutes, path, method);
+            const alreadyIterated = this.iterateRoutes(path, method);
             if (!alreadyIterated) {
                 this._response = (req, res) => {
                     res.status(404);
