@@ -59,11 +59,6 @@ export type HalleyListener = (req: Request, res: Reply) => void;
  */
 export type HalleyEnvironment = "production" | "development";
 
-/**
- * A middleware is a function that receive arguments to config a returned function that interact with the request and response objects
- */
-export type Middleware = (options?: any) => (req: Request, res: Reply) => void;
-
 const ServerOptions: ServerOptions = {
     IncomingMessage: Request,
     ServerResponse: Reply
