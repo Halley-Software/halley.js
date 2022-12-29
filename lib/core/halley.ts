@@ -59,7 +59,7 @@ export type HalleyListener = (req: Request, res: Reply) => void;
  */
 export type HalleyEnvironment = "production" | "development";
 
-const ServerOptions: ServerOptions = {
+const kServerOptions: ServerOptions = {
     IncomingMessage: Request,
     ServerResponse: Reply
 }
@@ -342,7 +342,7 @@ export class Halley {
             throw new TypeError("The port must be the same that you indicated at Halley constructor");
         }
 
-        const server = createServer(ServerOptions);
+        const server = createServer(kServerOptions);
         server.on("request", (req: Request, res: Reply) => {
 
             this.appRequest = req;
