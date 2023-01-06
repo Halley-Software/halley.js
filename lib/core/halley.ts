@@ -286,39 +286,37 @@ export class Halley {
      * ! Experimental Method
      * 
      * Add routes for each file inside the indicated directory as argument. So it can be accessed
-     * If there are another directories, the files inside them will be readed too^M
+     * If there are another directories inside the specified static dir, it will be skiped and his content will not be readed
+     * 
      */
     public async serveStatic(dirPath: string) {
         const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
         if (!path.isAbsolute) {
-            throw new FileError("The path must an absolute path!", "PATH_IS_NOT_ABSOLUTE");
+            throw HALLEY_PATH_IS_NOT_ABSOLUTE;
         }
         if (!fileOrDirectoryArgument) {
-            throw new FileError("The path must be a directory!", "ARGUMENT_IS_NOT_A_DIR")
+            throw HALLEY_ARGUMENT_IS_NOT_A_DIR;
         }
-
-        const dirItems = await fs.readdir(dirPath)
-
+        const dirItems = await fs.readdir(dirPath);
         for (const item of dirItems) {
             const itemType = await fs.lstat(`${dirPath}/${item}`)
-            if (itemType.isDirectory()) {/**/}
-
-            this.get(`${item}`, (req, res) => {
+            if (itemType.isDirectory()) {
+                continue;
+            }
+            this.get(`/${item}`, (req, res) => {
                 switch (true) {
                     case /.\.css$/.test(item):
-                        res.setHeader("Content-Type", "text/css")
-                        res.sendFile(`${dirPath}/${item}`)
+                        res.setHeader("Content-Type", "text/css");
                     break;
                     case /.\.js$/.test(item):
-                        res.setHeader("Content-Type", "text/js")
-                        res.sendFile(`${dirPath}/${item}`)
+                        res.setHeader("Content-Type", "text/js");
                     break;
                     default:
-                        res.setHeader("Content-Type", "text/plain")
-                        res.sendFile(`${dirPath}/${item}`)
+                        res.setHeader("Content-Type", "text/plain");
                     break;
                 }
-            })
+                res.sendFile(`${dirPath}/${item}`);
+            });
         }
     }
 
