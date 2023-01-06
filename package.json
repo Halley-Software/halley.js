@@ -43,7 +43,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": "10.0.0"
+    "node": ">=10.0.0"
   },
   "devDependencies": {
     "@tinyhttp/cors": "^2.0.0",
