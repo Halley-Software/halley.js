@@ -4,8 +4,16 @@
 
 'use strict';
 
-export { Halley } from "./core/halley.js";
-export { Request } from "./core/request.js";
-export { Reply } from "./core/reply.js";
-export type { HalleyEnvironment, HalleyListener } from "./core/halley.js";
-export { HRouter, Route } from "./core/router/halley.router.js"
+// Classes
+export * from "./core/halley.js";
+export * from "./core/request.js";
+export * from "./core/reply.js";
+export * from "./core/router/halley.router.js"
+
+// Types and Interfaces
+import { HalleyEnvironment as HEnvironment, HalleyListener as HListener } from "./core/halley.js";
+import { Route as RouteInterface } from "./core/router/halley.router.js"
+
+export type HalleyListener = HListener;
+export type HalleyEnvironment = HEnvironment;
+export interface Route extends RouteInterface{};
