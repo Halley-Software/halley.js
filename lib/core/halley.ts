@@ -201,13 +201,16 @@ export class Halley {
      * 
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
      * @returns `this` object
      */
-    public get(path: string, handler: HalleyListener): this {
+    public get(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
 
-        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
+        if (path[0] !== "/") {
+            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
 
-        this.halleyRoutes.push({path, method: "GET", handler});
+        this.routeStack.push({path, method: "GET", handler, middleware});
 
         return this;
     }
@@ -221,13 +224,16 @@ export class Halley {
      * 
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
      * @returns `this` object
      */
-    public post(path: string, handler: HalleyListener): this {
+    public post(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
 
-        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
+        if (path[0] !== "/") {
+            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
         
-        this.halleyRoutes.push({path, method: "POST", handler});
+        this.routeStack.push({path, method: "POST", handler, middleware});
 
         return this;
     }
@@ -240,13 +246,16 @@ export class Halley {
      * Is commonly used to update data to the server
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
      * @returns `this` object
      */
-    public put(path: string, handler: HalleyListener): this {
+    public put(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
 
-        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
+        if (path[0] !== "/") {
+            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
 
-        this.halleyRoutes.push({path, method: "PUT", handler});
+        this.routeStack.push({path, method: "PUT", handler, middleware});
 
         return this;
     }
@@ -259,13 +268,16 @@ export class Halley {
      * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
      * @param {string} path The path where the listener will execute
      * @param {HalleyListener} handler A callback function that will execute when the route is visited
+     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
      * @returns `this` object
      */
-    public delete(path: string, handler: HalleyListener): this {
+    public delete(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
 
-        if (path[0] !== "/") throw new TypeError("A route must start with '/'!");
+        if (path[0] !== "/") {
+            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
 
-        this.halleyRoutes.push({path, method: "DELETE", handler});
+        this.routeStack.push({path, method: "DELETE", handler, middleware});
 
         return this;
     }
