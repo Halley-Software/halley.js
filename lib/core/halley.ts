@@ -357,13 +357,10 @@ export class Halley {
 
         const server = createServer(kServerOptions);
         server.on("request", (req: Request, res: Reply) => {
-
             this.appRequest = req;
             this.appReply = res;
-
-            this.makeSuitable(req.url, req.method);
-            this._response.call(this, req, res);
-
+            this.makeSuitable(this.appRequest.url, this.appRequest.method);
+            this._response(this.appRequest, this.appReply)
         });
         options?.message ? console.info(options.message) : console.info(`Halley listening on port ${port}`);
         return server.listen(port, options?.hostname ?? "0.0.0.0");
