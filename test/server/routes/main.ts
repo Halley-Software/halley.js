@@ -1,4 +1,4 @@
-import { HRouter, Route } from "../../lib/index.js"
+import { HRouter, Route } from "../../../lib/index.js"
 
 export const router = new HRouter()
 
