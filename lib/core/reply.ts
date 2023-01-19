@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * NodeJS dependencies
+ * Node.JS dependencies
  */
 
 import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
@@ -15,7 +15,13 @@ import { readFile } from "node:fs/promises";
 // It is a good practise to import objects, classes, etc... from the globalThis object
 const { JSON } = globalThis;
 
-import { FileError } from "../errors/FileErrors.js"
+/**
+ * Halley.JS dependencies
+ */
+
+import { HALLEY_PATH_IS_NOT_ABSOLUTE } from "../errors/FileErrors.js";
+import { HALLEY_HTTP_ERROR } from "../errors/HTTPErrors.js";
+
 /**
  * A type wrapper for primitive and non-primitive data types
  */
