@@ -7,7 +7,7 @@
 
 import { HalleyListener } from "../halley.js";
 
-type usableMethods = "GET" | "POST" | "PUT" | "DELETE"
+type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
 
 /**
  * Route Defines the structure of a route.
