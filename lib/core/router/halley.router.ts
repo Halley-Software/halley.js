@@ -21,8 +21,9 @@ type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
 
 export interface Route {
     path: string;
-    method: usableMethods;
+    method: UsableMethods;
     handler: HalleyListener;
+    middleware?: HalleyListener
 }
 
 export class HRouter {
