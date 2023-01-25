@@ -11,13 +11,14 @@ import { IncomingMessage } from "node:http";
 const { Object } = globalThis;
 
 /**
- * Halley.JS dependencies
+ * A type wrapper for primitive and non-primitive data types
  */
-import { body } from "./reply.js";
+type body = string | number | boolean | object | Buffer;
 
 export class Request extends IncomingMessage {
 
-    public body: body[] = [];
+    public params: {} = {}
+    public readonly body: body[] = [];
 
     /**
      * Recommended to handle form in `.html` files
