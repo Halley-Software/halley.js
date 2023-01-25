@@ -47,7 +47,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send any data as a response 
-     * @param {body} body 
+     * @param {ReplyContent} body 
      * The body type is a type of types, including:
      * 
      * literal objets, numbers, strings...
@@ -61,7 +61,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * * `object` - Can be an literal object, `Date` or `Null`
      * * `Buffer` - Buffer < 60 80 10 >
      */
-    public send(body: body): this {
+    public send(body: ReplyContent): this {
         this.end(body);
         return this;
     }
@@ -83,9 +83,9 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send the response as a JavaScript Object Notation (JSON)
-     * @param {body} body The content to convert to JSON and send to the response
+     * @param {ReplyContent} body The content to convert to JSON and send to the response
      */
-    public json(body: body): this {
+    public json(body: ReplyContent): this {
         this.setHeader("Content-Type", "application/json");
         this.send(JSON.stringify(body, null, 4));
         return this;
