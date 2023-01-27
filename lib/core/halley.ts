@@ -15,7 +15,7 @@
 /**
  * Halley.js use and take as reference some third-party modules, so here are the mentions about there :D
  * 
- * Halley.js borned as a inspiration in express, so, it had taken some things from it like: The request and response classes
+ * Halley.js borned as a inspiration in express, so, it had taken some things from it like: The request and response classes, his middleware style, etc...
  * 
  * Halley.js use the pino logger https://github.com/pinojs/pino
  * 
