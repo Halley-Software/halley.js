@@ -9,7 +9,7 @@
 
 /**
  * Halley is the main core of the project.
- * Here all the another classes and objects are grouped and send to the node HTTP server
+ * Here we make use of all another classes and objects to build a response that the Node.js HTTP Server can interpret
  */
 
 /**
