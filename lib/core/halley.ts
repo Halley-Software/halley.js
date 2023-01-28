@@ -66,6 +66,9 @@ const kServerOptions: ServerOptions = {
     ServerResponse: Reply
 } as const;
 
+/**
+ * Halley class is the base of Halley.js, from here we can add routes, listen for requests, modify headers from middlewares, etc...
+ */
 export class Halley {
 
     /**
