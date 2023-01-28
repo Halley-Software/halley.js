@@ -38,7 +38,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
             // We throw directly the exception calling the class constructor
             // Because we need to notice about the status that not exists
             throw new HALLEY_HTTP_ERROR(
-                `The status code ${statusReply} dont exist in the object 'STATUS_CODES', Provided from Node.js`, "STATUS_CODE_DONT_EXISTS"
+                `The status code ${statusReply} is not a standard valid status code`, "STATUS_CODE_DONT_EXISTS"
             );
         }
         this.statusCode = statusReply;
