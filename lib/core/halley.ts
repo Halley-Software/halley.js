@@ -128,6 +128,7 @@ export class Halley {
         options: {
             port: number,
             env?: HalleyEnvironment,
+            logger?: true,
             useNodeEnv?: boolean,
         }
     ) {
