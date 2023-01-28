@@ -149,7 +149,7 @@ export class Halley {
     }
 
     /**
-     * Matches the gived param with any object of localRoutes and attach the handler of the return object to this.response
+     * Matches the gived param with any object of localRoutes and attach the handler of the return object to this._response
      * 
      * @param {string} path The url of the route to match
      * 
