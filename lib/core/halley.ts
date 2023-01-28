@@ -48,9 +48,11 @@ import { HALLEY_PATH_IS_NOT_ABSOLUTE, HALLEY_ARGUMENT_IS_NOT_A_DIR } from "../er
 import { HALLEY_ROUTE_DO_NOT_START_WITH_SLASH } from "../errors/RouteErrors.js";
 
 /**
- * HalleyListener is a replace to the node:http RequestListener type.
+ * Similar to RequestListener provided by `node:http`, a HalleyListener take an request and a response as parameters and manage it to generate a response
  * 
- * With HalleyListener, it allow we to use customs Requests and Responses objects like in the Halley case
+ * `RequestListener` use the IncomingMessage and ServerResponse classes provided by Node.js as Readable-Writeable Streams.
+ * 
+ * Meanwhile `HalleyListener` use extended classes of them adding extra functionality
  */
 export type HalleyListener = (req: Request, res: Reply) => void;
 
