@@ -25,7 +25,7 @@ import { HALLEY_HTTP_ERROR } from "../errors/HTTPErrors.js";
 /**
  * A type wrapper for primitive and non-primitive data types
  */
-type ReplyContent = string | boolean | object | Buffer | null | undefined;
+type ReplyContent = string | boolean | Buffer | null | undefined;
 
 export class Reply<Req extends IncomingMessage = IncomingMessage> extends ServerResponse<Req> {
     /**
