@@ -10,15 +10,10 @@
 import { IncomingMessage } from "node:http";
 const { Object } = globalThis;
 
-/**
- * A type wrapper for primitive and non-primitive data types
- */
-type body = string | number | boolean | object | Buffer;
-
 export class Request extends IncomingMessage {
 
-    public params: {} = {}
-    public readonly body: body[] = [];
+    public readonly params: {} = {}
+    public readonly body: string[] = [];
 
     /**
      * Recommended to handle form in `.html` files
