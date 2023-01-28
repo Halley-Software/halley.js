@@ -167,7 +167,8 @@ export class Halley {
                 if (alreadyIterated.middleware) {
                     // Check for individual middlewares
                     alreadyIterated.middleware(this.appRequest, this.appReply);
-                } else if (this.middlewares.length > 0) {
+                }
+                if (this.middlewares.length > 0) {
                     this.middlewares.forEach((callback: HalleyListener) => {
                         callback(this.appRequest, this.appReply);
                     });
