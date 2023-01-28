@@ -163,16 +163,15 @@ export class Halley {
                     res.status(404);
                     res.send(`<h2>The route: '${path}' dont exists</h2>`);
                 }
-            }
-            else if (alreadyIterated.middleware) {
-                alreadyIterated.middleware(this.appRequest, this.appReply);
-                this._response = alreadyIterated.handler;
-            } else if (this.middlewares.length > 0) {
-                this.middlewares.forEach((callback: HalleyListener) => {
-                    callback(this.appRequest, this.appReply);
-                });
-                this._response = alreadyIterated.handler;
             } else {
+                if (alreadyIterated.middleware) {
+                    // Check for individual middlewares
+                    alreadyIterated.middleware(this.appRequest, this.appReply);
+                } else if (this.middlewares.length > 0) {
+                    this.middlewares.forEach((callback: HalleyListener) => {
+                        callback(this.appRequest, this.appReply);
+                    });
+                }
                 this._response = alreadyIterated.handler;
             }
         }
