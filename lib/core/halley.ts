@@ -293,7 +293,6 @@ export class Halley {
     }
 
     /**
-     * ! Experimental Method
      * 
      * Add routes for each file inside the indicated directory as argument. So it can be accessed
      * If there are another directories inside the specified static dir, it will be skiped and his content will not be readed
