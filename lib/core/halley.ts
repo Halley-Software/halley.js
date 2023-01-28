@@ -185,7 +185,7 @@ export class Halley {
     }
 
     /** 
-     * Copy an object and is embedded into the `Halley` class
+     * Add a HalleyListener function returned by the execution of another function to middlewares stack
      * @param {HalleyListener} appendedObject The source object that will be embedded into Halley class or the HalleyListener that will be executed
      */
     public register(appendedObject: HalleyListener) {
