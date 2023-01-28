@@ -47,19 +47,15 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send any data as a response 
-     * @param {ReplyContent} body 
+     * @param {ReplyContent} body
      * The body type is a type of types, including:
-     * 
-     * literal objets, numbers, strings...
+     * * `string` - Hello World!
+     * * `null` - null
+     * * `undefined` - undefined
+     * * `Buffer` - Buffer < 60 80 10 >
      * @returns `this` object
      * 
      * `body` can accept the follow primitive and non-primitive data types:
-     * 
-     * * `string` - Hello World!
-     * * `number` - 20
-     * * `boolean` - true
-     * * `object` - Can be an literal object, `Date` or `Null`
-     * * `Buffer` - Buffer < 60 80 10 >
      */
     public send(body: ReplyContent): this {
         this.end(body);
