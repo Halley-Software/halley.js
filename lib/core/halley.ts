@@ -177,20 +177,22 @@ export class Halley {
         }
     }
 
-    /**
-     * ! Experimental Method
-     * 
+    /** 
      * Copy an object and is embedded into the `Halley` class
-     * @param {Route[] | Middleware} appendedObject The source object that will be embedded into Halley class or the HalleyListener that will be executed
+     * @param {HalleyListener} appendedObject The source object that will be embedded into Halley class or the HalleyListener that will be executed
      */
-    public use(appendedObject: Route[] | HalleyListener) {
-        if (typeof appendedObject === "object") {
-            Object.assign(this.routeStack, appendedObject);
-        } else {
-            this.middlewares.push(appendedObject);
-        }
+    public register(appendedObject: HalleyListener) {
+        this.middlewares.push(appendedObject);
     }   
     
+    /**
+     * Add routes into the routeStack
+     * @param {Route} appendedObject
+     */
+    public use(appendedObject: Route | Route[]) {
+        Object.assign(this.routeStack, appendedObject)
+    }
+
     /**
      * Push the params to an array with all the routes of the running project
      * 
