@@ -64,7 +64,7 @@ export type HalleyEnvironment = "production" | "development";
 const kServerOptions: ServerOptions = {
     IncomingMessage: Request,
     ServerResponse: Reply
-}
+} as const;
 
 export class Halley {
 
