@@ -2,7 +2,7 @@
   "name": "halley.http",
   "author": "Raxabi <openhalleysoftware@gmail.com>",
   "publisher": "Halley Software",
-  "version": "1.3.0-development.1",
+  "version": "1.3.0-next-development.1",
   "contributors": [
     "Raxabi"
   ],
@@ -33,7 +33,7 @@
   "exports": "./dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test": "nodemon test/server/index.ts",
+    "test:server": "nodemon test/server/index.ts",
     "test:js": "nodemon test/index.js"
   },
   "files": [
