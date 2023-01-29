@@ -10,14 +10,10 @@
 import { IncomingMessage } from "node:http";
 const { Object } = globalThis;
 
-/**
- * Halley.JS dependencies
- */
-import { body } from "./reply.js";
-
 export class Request extends IncomingMessage {
 
-    public body: body[] = [];
+    public readonly params: {} = {}
+    public readonly body: string[] = [];
 
     /**
      * Recommended to handle form in `.html` files

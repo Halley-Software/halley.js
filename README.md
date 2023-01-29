@@ -1,7 +1,7 @@
 # Halley.JS ☄️
 # The small, fast and easy web framework.
 
-## The 1.2.1 version of Halley has arrived!!!!
+## The 1.3.0 version of Halley has arrived!!!!
 
 Fast getting started:
 
@@ -10,97 +10,126 @@ Fast getting started:
 import { Halley } from "halley.http"
 
 const halley = new Halley({
-    port: 5000,
-    environment: "development"
+  port: 5000,
+  environment: "development"
 })
 
 halley.get("/", (req, res) => {
-    res.send("<h1>Hello World!</h1>")
+  res.send("<h1>Hello World!</h1>")
 })
 
 halley.ready(halley.port)
 
 ```
 
-# Changes of version 1.2.1
+# Changes of version 1.3.0
 
-### - req.formAsObjectParser method was successfully implemented
-  ## ⚠️ This property is designed especially to use in HTML forms (template engines or similars should be works nicely anyway)
+## - Middlewares support!
+  - ## But what is a middleware?
+    - ### The concept of a middleware was took from express and its basically a function that can take zero or more arguments<br>and return another function that take a request and a response as parameters
+    - ### Then when we call the first function, the return value, that is, the function previously mentioned that take a request and a response.<br>Is passed to Halley.js and it will execute it when a request reach to our server
+    - ### A middleware allow we to modify the request and the response, for example to modify the headers of the response
 
-    - If you want, obviously, you can use it with another tool / framework, but is designed to be tidy to use with HTML forms
+  ### - An little and a bit dirty example of a middleware that allow we to modify the CORS headers:
+  ```ts
+  // simple-server-middlewares/cors.ts
+  import { Request, Reply } from "halley.http";
 
-  ## - A litte example:
-  ```js
-     // The callback function must be asynchronous to read the incoming ReadableStream
-     app.post("/", async (req, res) => {
-       await req.formAsObjectParser()
-       // 'formAsObjectParser' method must be explicit executed with the 'await' keyword
-       // if await is not indicated, the req.body will be empty
-       console.log(req.body)
-       res.send("Response sent")
-     })
+  interface CorsOptions {
+      credentials?: boolean,
+      headers?: string[],
+      methods?: string | string[],
+      origins?: string | string[],
+      exposedHeaders?: string[]
+      age?: number    
+  }
+  
+  const kDefaultOptions: CorsOptions = {
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    origins: "*"
+  }
+  
+  export const cors = (options: CorsOptions = kDefaultOptions) => {
+    return function(_req: Request, res: Reply) {
+      if (options.origins) {
+        res.setHeader("Access-Control-Allow-Origin", options.origins)   
+      }
+    }
+  }
   ```
 
-  Supposing that the data is sended through a HTML form.<br/>
-  And that form contains a 'input' tag with a 'name' attribute:<br/>
-  When the event send the data to the server, the output should be something like this:<br/>
+  ### - Now we'll use this new middleware
+  ```ts
+  // simple-server-middlewares/index.ts
+  import { Halley } from "halley.http"
+  import { cors } from "./cors.ts"
 
-  ` [ { Testing: 'req.body' } ]`
+  const halley = new Halley({
+    port: 5000,
+    env: "development"
+  })
 
-  Where the 'Testing' key of the object inside the array is the value of 'name' attribute indicated in
-  the HTML form.<br/>
-  And the value of the object inside the array is the value inserted at the 'input' element.
+  halley.register(cors({origins: "http://localhost:3000"}))
 
-### - req.rawBodyParser method was successfully implemented
-  ## ⚠️ This property is designed especially to use in react, vue or another framework where you use fetch to send data from the frontend
-    - That's fine because in react, vue, etc..., commonly you send the data using a native JavaScript fetch or axios methods
-    - And the 'name' attributes in 'input' JSX elements are ineffective using fetch or similars
-    
-    - If you want, obviously, you can use it with another tool / framework.
-    - But is designed to be tidy to use with frameworks where you use fetch as a way to send data
+  halley.get("/", (req, res) => {
+    // Now when we visit the HTML on the browser, we will see the 'Access-Control-Allow-Origin' header on the response section, to see it:
+    // Open the developer tools on your favorite browser > go to networking section > click on the '/' file > in the response headers you will see the header
+    res.send("<h1>Hello, World!</h1>")
+  })
 
-  ## - A little example:
+  halley.ready(5000)
+  ```
 
- ```js
- // api.frontend.ts (frontend file)
- const saveData = async (url: string, body: object) => await fetch(url, {
-   method: "POST",
-   body: JSON.stringify(body)
- })
+  ### - Alternately we can use a middleware individually for one specific route
+  ```ts
+  import { Halley } from "halley.http"
+  import { cors } from "./cors.ts"
 
- const [name, setName] = useState("")
- const [description, setDescription] = useState("")
- const [url, setUrl] = useState("")
+  const halley = new Halley({
+    port: 5000,
+    env: "development"
+  })
 
- // Then we send the data using the previous function
- saveData("http://localhost:5000/save", {
-    // Where name, description and url are the state variables declared above
-    name, description, url
- })
- // In this example I suppose that I'm using a database that accepts a fields with the same names
- // And a React component with the same props name
+  halley.get("/", (req, res) => {
+    res.send("<h1>Hello, World!</h1>")
+  }, cors({origins: "http://localhost:3000"}))
 
- ```
+  halley.get("/second", (req, res) => {
+    res.send("<h1>This is the secondary route</h1>")
+  })
 
- ```ts
- // app.controllers.ts (backend file)
- // The callback function must be asynchronous to read the incoming ReadableStream
- app.post("/save", async (req, res) => {
-    await req.rawBodyParser()
-    const bodyResult = JSON.parse(req.body)
+  // In this example, the middleware will only be executed on the '/' route. You can check it as the same way that we see the previous example
+  halley.ready(5000)
+  ```
 
-    // Do stuff with the bodyResult constant
+  ### - If you want, you can use both methods of use a middleware, for example:
+  ```ts
+  import { Halley } from "halley.http"
+  import { cors } from "./cors.ts"
 
-    // To show how it works:
-    // we has sent a object stringified with fetch
-    // Now in the backend we convert it back to a JavaScript literal object
-    // and finally we have the properties that we had used in react
-    console.log(bodyResult.name)
-    console.log(bodyResult.description)
-    console.log(bodyResult.url)
- })
- ```
+  const halley = new Halley({
+    port: 5000,
+    env: "development"
+  })
 
- - ## This example is fully completed in [this WIP repository](https://github.com/Raxabi/halley.js-API-REST)
+  halley.register(cors({origins: "http://localhost:10000"}))
 
-## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
+  halley.get("/", (req, res) => {
+    res.send("<h1>Hello, World!</h1>")
+  }, cors({origins: "http://localhost:3000"}))
+
+  halley.get("/second", (req, res) => {
+    res.send("<h1>This is the secondary route</h1>")
+  })
+
+  // In this example, the middleware that allow 'Access-Control-Allow-Origin' to http://localhost:3000 will only be executed in the '/' route
+  // But 'Access-Control-Allow-Origin' will be allowed for http://localhost:10000 host, however the http://localhost:3000 host is not allowed at '/second'
+  halley.ready(5000)
+  ```
+
+  ### - Since middlewares have the same struct and functionality that express and other framework based on it you can use some middlewares in halley.js too!
+  ### - Keep in mind that some middlewares may not work in halley.js, for example, the cors library from express dont works (almost for now).<br>But the cors from tinyhttp lib do it!
+
+  ### - As time passes the Halley-Software will publish some middlewares that works fine with Halley.js
+#
+## By the halley.js unique author for now - Raxabi < openhalleysoftware@gmail.com >

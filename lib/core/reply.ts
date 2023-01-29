@@ -5,7 +5,7 @@
 'use strict';
 
 /**
- * NodeJS dependencies
+ * Node.JS dependencies
  */
 
 import { IncomingMessage, ServerResponse, STATUS_CODES } from "node:http";
@@ -16,9 +16,16 @@ import { readFile } from "node:fs/promises";
 const { JSON } = globalThis;
 
 /**
+ * Halley.JS dependencies
+ */
+
+import { HALLEY_PATH_IS_NOT_ABSOLUTE } from "../errors/FileErrors.js";
+import { HALLEY_HTTP_ERROR } from "../errors/HTTPErrors.js";
+
+/**
  * A type wrapper for primitive and non-primitive data types
  */
-export type body = string | number | boolean | object | Buffer;
+type ReplyContent = string | boolean | Buffer | null | undefined;
 
 export class Reply<Req extends IncomingMessage = IncomingMessage> extends ServerResponse<Req> {
     /**
@@ -27,27 +34,30 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      * @returns `this` object
      */
     status(statusReply: number): this {
-        if (!STATUS_CODES[statusReply]) throw new Error(
-            `The status code ${statusReply} dont exist in the object 'STATUS_CODES', Provided from Node.js`
-        )
+        if (!STATUS_CODES[statusReply]) {
+            // We throw directly the exception calling the class constructor
+            // Because we need to notice about the status that not exists
+            throw new HALLEY_HTTP_ERROR(
+                `The status code ${statusReply} is not a standard valid status code`, "STATUS_CODE_DONT_EXISTS"
+            );
+        }
         this.statusCode = statusReply;
         return this;
     }
 
     /**
      * Send any data as a response 
-     * @param {body} body The body type is a type of types, that is, that it's a types wrapper
+     * @param {ReplyContent} body
+     * The body type is a type of types, including:
+     * * `string` - Hello World!
+     * * `null` - null
+     * * `undefined` - undefined
+     * * `Buffer` - Buffer < 60 80 10 >
      * @returns `this` object
      * 
      * `body` can accept the follow primitive and non-primitive data types:
-     * 
-     * * `string` - Hello World!
-     * * `number` - 20
-     * * `boolean` - true
-     * * `object` - Can be an literal object, `Date` or `Null`
-     * * `Buffer` - Buffer < 60 80 10 >
      */
-    public send(body: body): this {
+    public send(body: ReplyContent): this {
         this.end(body);
         return this;
     }
@@ -60,7 +70,7 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
      */
     public async sendFile(filePath: string, encoding: BufferEncoding = "utf-8"): Promise<this> {
         if (!isAbsolute(filePath)) {
-            throw new TypeError("The path must an absolute path!");
+            throw HALLEY_PATH_IS_NOT_ABSOLUTE;
         }
         const file = await readFile(filePath, encoding);
         this.send(file);
@@ -69,9 +79,9 @@ export class Reply<Req extends IncomingMessage = IncomingMessage> extends Server
 
     /**
      * Send the response as a JavaScript Object Notation (JSON)
-     * @param {body} body The content to convert to JSON and send to the response
+     * @param {ReplyContent} body The content to convert to JSON and send to the response
      */
-    public json(body: body): this {
+    public json(body: ReplyContent): this {
         this.setHeader("Content-Type", "application/json");
         this.send(JSON.stringify(body, null, 4));
         return this;
