@@ -298,11 +298,11 @@ export class Halley {
      * If there are another directories inside the specified static dir, it will be skiped and his content will not be readed
      * 
      */
-    public async serveStatic(dirPath: string) {
-        const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
-        if (!path.isAbsolute) {
+    public async serveStatic(dirPath: string): Promise<void> {
+        if (!path.isAbsolute(dirPath)) {
             throw HALLEY_PATH_IS_NOT_ABSOLUTE;
         }
+        const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
         if (!fileOrDirectoryArgument) {
             throw HALLEY_ARGUMENT_IS_NOT_A_DIR;
         }
