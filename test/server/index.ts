@@ -2,24 +2,40 @@ import { Halley } from "../../lib/index.js"
 import dotenv from "dotenv"
 
 import { cors } from "./custom/cors.js"
+import { routes } from "./routes/routes.js"
 
 dotenv.config({})
-const { pathname: filename } = new URL("./", import.meta.url)
 
 const app = new Halley({
   port: 5000,
   useNodeEnv: true
 })
 
-//app.use(cors({origins: "http://localhost:3000"}))
+/* .register((req, res) => {
+  console.log("Hora: " + new Date(Date.now()));
+}) */
+
+app.register(cors({origins: "http://localhost:3000"}))
+//Buffer.from("< 60 80 10 >")
+//app.use(routes)
+
+const { pathname: staticDir } = new URL("./", import.meta.url)
+
+app.serveStatic(staticDir + "./public/")
 
 app.get("/", (req, res) => {
-  res.sendFile(filename + "index.html")  
-}, cors({origins: "http://localhost:3000"}))
+  res.sendFile(staticDir + "index.html")
+})
 
-app.get("/second", (req, res) => {
+app.post("/", async (req, res) => {
+  await req.rawBodyParser()
+  console.log(req.body)
+  res.send("Recibido")
+})
+
+/* app.get("/second", (req, res) => {
   res.send("<h1>Segunda ruta actual</h1>")
-}, cors({origins: "http://localhost:4000"}))
+}) */
 
 app.ready(5000, {
   hostname: "0.0.0.0",
