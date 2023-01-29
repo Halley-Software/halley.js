@@ -314,7 +314,7 @@ export class Halley {
             if (itemType.isDirectory()) {
                 continue;
             }
-            this.get(`/${item}`, (req, res) => {
+            this.get(`/${item}`, (_req, res) => {
                 switch (true) {
                     case /.\.css$/.test(item):
                         res.setHeader("Content-Type", "text/css");
