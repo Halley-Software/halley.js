@@ -16,7 +16,7 @@ type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
  * Repectively the types are:
  * * path - `string`
  * * method - `UsableMethods` (after all this type is a type of strings)
- * * Function - `HalleyListener`
+ * * handler - `HalleyListener`
  * * middleware - `HalleyListener`
  */
 
