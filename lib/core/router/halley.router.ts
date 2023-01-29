@@ -34,7 +34,7 @@ export class HRouter {
      * 
      * The routes contained in `routerRouter` will be added to the `halleyRoutes` array allocated in `Halley` class
      */
-    public readonly routerRoutes: Route[] = [];
+    protected readonly routerRoutes: Route[] = [];
 
     /**
      * 
