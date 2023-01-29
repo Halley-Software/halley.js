@@ -6,26 +6,26 @@ let contributors = {
                     "Halley": [
                         "Halley Class",
                         Types = [
-                            "Halley Listener",
-                            "Halley Environment"
+                            "HalleyListener",
+                            "HalleyEnvironment"
                         ]
                     ],
                     "Request": [
                         "Request Class",
                         Types = [
-                            ""
                         ]
                     ],
                     "Reply": [
                         "Reply Class",
                         Types = [
-                            "body",
+                            "ReplyContent",
                         ]
                     ],
                     "Halley Router": [
                         "HRouter Class",
                         Types = [
-                            "Route"
+                            "Route",
+                            "UsableMethods"
                         ]
                     ]
                 },
@@ -33,7 +33,7 @@ let contributors = {
                     "Halley Colors": [
                         "HColors Class",
                         Types = [
-                            "HColorsSelection"
+                            "HColorsSelection",
                         ]
                     ]
                 }
