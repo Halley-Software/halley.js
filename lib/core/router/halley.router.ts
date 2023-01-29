@@ -15,8 +15,9 @@ type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
  * It consumes a path, mathod and a handler:
  * Repectively the types are:
  * * path - `string`
- * * method - `string`
+ * * method - `UsableMethods` (after all this type is a type of strings)
  * * Function - `HalleyListener`
+ * * middleware - `HalleyListener`
  */
 
 export interface Route {
