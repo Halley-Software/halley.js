@@ -122,6 +122,8 @@ export class Halley {
      * 
      * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      * 
+     * @param {boolean} options.logger Enable or disable the Pino logger
+     * 
      * @param {boolean} options.useNodeEnv If this option is indicated, a environment variable must be available so that Node.js can read
      */
     public constructor(
