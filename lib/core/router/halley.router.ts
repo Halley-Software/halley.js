@@ -1,6 +1,6 @@
 /**
  * The router is a essential part of all the web frameworks.
- * Mostly of time it is used to take the routes gived by the developer and process it somehow.
+ * It is used to take the routes gived from an input and process them somehow.
  */
 
 'use strict';
