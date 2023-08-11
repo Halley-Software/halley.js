@@ -11,6 +11,10 @@
 import type { HalleyListener, MiddlewareReturn, PathLike } from "../halley.js";
 import { Request } from "../request.js";
 
+/**
+ * External dependencies
+ */
+import pathTR from "path-to-regexp";
 
 type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
 
