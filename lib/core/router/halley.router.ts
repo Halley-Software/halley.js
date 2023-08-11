@@ -5,7 +5,12 @@
 
 'use strict';
 
-import { HalleyListener } from "../halley.js";
+/**
+ * Halley.JS dependencies
+ */
+import type { HalleyListener, MiddlewareReturn, PathLike } from "../halley.js";
+import { Request } from "../request.js";
+
 
 type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
 
