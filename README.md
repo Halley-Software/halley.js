@@ -1,16 +1,15 @@
 # Halley.JS ☄️
-# The small, fast and easy web framework.
 
-## The 1.3.0 version of Halley has arrived!!!!
+## The small, fast and easy web framework
+
+## The 2.0.0 version of Halley has arrived
 
 Fast getting started:
 
 ```js
-
 import { Halley } from "halley.http"
 
 const halley = new Halley({
-  port: 5000,
   environment: "development"
 })
 
@@ -18,118 +17,154 @@ halley.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>")
 })
 
-halley.ready(halley.port)
-
+halley.ready(5000)
 ```
 
-# Changes of version 1.3.0
+## Changes of version 2.0.0
 
-## - Middlewares support!
-  - ## But what is a middleware?
-    - ### The concept of a middleware was took from express and its basically a function that can take zero or more arguments<br>and return another function that take a request and a response as parameters
-    - ### Then when we call the first function, the return value, that is, the function previously mentioned that take a request and a response.<br>Is passed to Halley.js and it will execute it when a request reach to our server
-    - ### A middleware allow we to modify the request and the response, for example to modify the headers of the response
+- Now you listen on a port describing the port on `Halley.prototype.ready` function instead of the constructor
 
-  ### - An little and a bit dirty example of a middleware that allow we to modify the CORS headers:
-  ```ts
-  // simple-server-middlewares/cors.ts
-  import { Request, Reply } from "halley.http";
+- `Request.prototype.body` property has now `string` type, giving the user more versatility to use this variable
 
-  interface CorsOptions {
-      credentials?: boolean,
-      headers?: string[],
-      methods?: string | string[],
-      origins?: string | string[],
-      exposedHeaders?: string[]
-      age?: number    
-  }
-  
-  const kDefaultOptions: CorsOptions = {
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    origins: "*"
-  }
-  
-  export const cors = (options: CorsOptions = kDefaultOptions) => {
-    return function(_req: Request, res: Reply) {
-      if (options.origins) {
-        res.setHeader("Access-Control-Allow-Origin", options.origins)   
+- You can add some initial routes in the constructor using the `initialRoutes` property
+
+- Added `Halley.prototype.custom` allowing the user use HTTP methods the he defines
+
+- Now the `Route` interface have an optional generic type, to indicate the HTTP Methods that are alloweds
+
+  - For example, imagine that u want separe the "GET" and "POST" routes in differents arrays and then add them to Halley.js using `Halley.prototype.use`
+
+    ```ts
+    import { Halley, type Route } from "../../lib/index.js";
+
+    const app = new Halley()
+
+    // Indicating the HTTP Method, guarantees that just can use the "GET" method
+    const getRoutes: Route<"GET">[] = [{
+      path: "/",
+      method: "GET",
+      handler: (_req, res) => {
+        res.send("<h1>Hello GET!</h1>")
       }
-    }
-  }
-  ```
+    }]
 
-  ### - Now we'll use this new middleware
-  ```ts
-  // simple-server-middlewares/index.ts
-  import { Halley } from "halley.http"
-  import { cors } from "./cors.ts"
+    // The same occurs when using POST
+    const postRoutes: Route<"POST">[] = [{
+      path: "/",
+      method: "POST",
+      handler: (_req, res) => {
+        res.send("<h1>Hello POST!</h1>")
+      }
+    }]
 
-  const halley = new Halley({
-    port: 5000,
-    env: "development"
-  })
+    app.use(getRoutes).use(postRoutes)
 
-  halley.register(cors({origins: "http://localhost:3000"}))
+    app.ready(5000)
+    ```
 
-  halley.get("/", (req, res) => {
-    // Now when we visit the HTML on the browser, we will see the 'Access-Control-Allow-Origin' header on the response section, to see it:
-    // Open the developer tools on your favorite browser > go to networking section > click on the '/' file > in the response headers you will see the header
-    res.send("<h1>Hello, World!</h1>")
-  })
+  - If no generic is provided, the default methods passed to the generic are GET, POST, PUST and DELETE
 
-  halley.ready(5000)
-  ```
+- URL parameters is now allowed using colons before the parameter name
 
-  ### - Alternately we can use a middleware individually for one specific route
-  ```ts
-  import { Halley } from "halley.http"
-  import { cors } from "./cors.ts"
+  - We are simulating a web store, to use parameters in our path url we can must keep in mind the next:
 
-  const halley = new Halley({
-    port: 5000,
-    env: "development"
-  })
+    - The url parameters must begins with colon before the parameter name like this: ":parameter", look the next example:
 
-  halley.get("/", (req, res) => {
-    res.send("<h1>Hello, World!</h1>")
-  }, cors({origins: "http://localhost:3000"}))
+    ```ts
+    app.get("/products/:name", (req, res) => {
+      res.send("<h1>The product: " + req.params.name + " is available</h1>")
+    })
+    ```
 
-  halley.get("/second", (req, res) => {
-    res.send("<h1>This is the secondary route</h1>")
-  })
+    We are requesting the product on that store that have the same name in the database that the parameter `name`
 
-  // In this example, the middleware will only be executed on the '/' route. You can check it as the same way that we see the previous example
-  halley.ready(5000)
-  ```
+- You can use regular expressions instead a string to indicate the route path
 
-  ### - If you want, you can use both methods of use a middleware, for example:
-  ```ts
-  import { Halley } from "halley.http"
-  import { cors } from "./cors.ts"
+  - Lets try using a regular expresion, in this case using a literal regular expression:
 
-  const halley = new Halley({
-    port: 5000,
-    env: "development"
-  })
+    ```ts
+    app.get(/\/ab?cd/, (_req, res) => {
+      res.send("<h1>Ruta con expresion regular!</h1>")
+    })
 
-  halley.register(cors({origins: "http://localhost:10000"}))
+    // With this regex, you can access to /abcd or /acd, but not to /bcd or /cd
+    ```
 
-  halley.get("/", (req, res) => {
-    res.send("<h1>Hello, World!</h1>")
-  }, cors({origins: "http://localhost:3000"}))
+    - Using a constructor:
 
-  halley.get("/second", (req, res) => {
-    res.send("<h1>This is the secondary route</h1>")
-  })
+    ```ts
+    app.get(new RegExp("/[a-zA-Z0-9]+s$"), (_req, res) => {
+      res.send("<h1>Ruta con expresion regular usando un constructor!</h1>")
+    })
 
-  // In this example, the middleware that allow 'Access-Control-Allow-Origin' to http://localhost:3000 will only be executed in the '/' route
-  // But 'Access-Control-Allow-Origin' will be allowed for http://localhost:10000 host, however the http://localhost:3000 host is not allowed at '/second'
-  halley.ready(5000)
-  ```
+    // With this regex, you can access to /products, /elements, /users
+    // Or any other route that includes letter from a to z without case sensitive o any number in any position
+    // As long as the route ends with 's', but it can not contains only 's' for example: /s
+    ```
 
-  ### - Since middlewares have the same struct and functionality that express and other framework based on it you can use some middlewares in halley.js too!
-  ### - Keep in mind that some middlewares may not work in halley.js, for example, the cors library from express dont works (almost for now).<br>But the cors from tinyhttp lib do it!
+    - Of course, if you dont beings your route paths with a '/' it will throw an error too, an example would be this:
 
-  ### - As time passes the Halley-Software will publish some middlewares that works fine with Halley.js
-#
-## By the halley.js unique author for now - Raxabi < openhalleysoftware@gmail.com >
+    ```ts
+    // Here we are using a literal regex, in this case, you need to escape the slash character (/), like in this example
+    app.get(/\/route1/, ...)
+    ```
+
+    - In another way if you doesnt escape the character JavaScript / TypeScript will conside the line a comment:
+
+    ```ts
+    app.get(//route1/, ...)
+    ```
+
+    - Or if you try to not escape the character and just write the literal regex, will throw an error, like this:
+
+    ```ts
+    app.get(/route1/, ...)
+
+    // Cause an HALLEY_ROUTE_DO_NOT_START_WITH_SLASH exception
+    ```
+
+    In this case Halley.js throws an HALLEY_ROUTE_DO_NOT_START_WITH_SLASH exception
+
+    - Would happen the same if you use the `RegExp` constructor using the new operator:
+
+    ```ts
+    app.get(new RegExp("route1"), ...)
+
+    // Cause an HALLEY_ROUTE_DO_NOT_START_WITH_SLASH exception
+    ```
+
+## Internal details
+
+- Regexs path are checked using the `RegExp.prototype.source` property, it returns a string containing the regex content:
+
+  1. In the case of a literal regex the value between both slashes are returned
+
+  2. In the case of a regex created using his constructor;
+
+      1. If a literal regex is passed, cause the `1.` step behavior
+
+      2. If a string is passed, returns that string but scaping some characters like slashes
+
+          - like in this example:
+
+          ```ts
+          new RegExp("/route1").source // Output -> \/route1 <- The escape character is added automatically to escape the slash
+          ```
+
+  - In this way Halley.js forces you to add a slash at the route path begins, checking the [1] string position that returns `RegExp.prototype.source`
+
+- `Halley` class now inherit from the `HRouter` class
+
+- Now path parameters validation occurs in the HRouter path using `path-to-regexp` package, its useful, zero dependencies and easy to use
+
+- The Request and Reply / Response objects are now passed as parameters instead of being a class property
+
+- Middlewares are now resolved using Promise class methods like `Promise.resolve` or `Promise.all`
+
+- The global middleware array changed his name to `middlewareStack`, now is called similar to the route array
+
+## Fixes
+
+- Fix bug that doesnt allow use global middlewares and local middleware simultaneously (in method `makeSuitable` validation)
+
+## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
