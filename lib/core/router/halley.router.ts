@@ -23,20 +23,19 @@ export type BasicMethods = "GET" | "POST" | "PUT" | "DELETE";
 
 /**
  * Route Defines the structure of a route.
- * 
- * It consumes a path, mathod and a handler:
+ *
+ * It consumes a path, mathod, a handler and optionally another handler returned by a function:
  * Repectively the types are:
- * * path - `string`
- * * method - `UsableMethods` (after all this type is a type of strings)
+ * * path - `string or regex`
+ * * method - `UsableMethods`
  * * handler - `HalleyListener`
  * * middleware - `HalleyListener`
  */
-
-export interface Route {
-    path: string;
-    method: UsableMethods;
-    handler: HalleyListener;
-    middleware?: HalleyListener
+export interface Route<AdditionalMethods extends string = string> {
+    path: PathLike,
+    method: AdditionalMethods,
+    handler: HalleyListener,
+    middleware?: MiddlewareReturn,
 }
 
 export class HRouter {
