@@ -55,7 +55,7 @@ halley.ready(5000)
   - For example, imagine that u want separe the "GET" and "POST" routes in differents arrays and then add them to Halley.js using `Halley.prototype.use`
 
     ```ts
-    import { Halley, type Route } from "../../lib/index.js";
+    import { Halley, type Route } from "@laniakeajs/halley.http";
 
     const app = new Halley()
 
