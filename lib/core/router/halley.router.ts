@@ -16,7 +16,10 @@ import { Request } from "../request.js";
  */
 import pathTR from "path-to-regexp";
 
-type UsableMethods = "GET" | "POST" | "PUT" | "DELETE"
+/**
+ * Basic HTTP methods for type-safe
+ */
+export type BasicMethods = "GET" | "POST" | "PUT" | "DELETE";
 
 /**
  * Route Defines the structure of a route.
