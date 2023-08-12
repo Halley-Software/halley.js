@@ -41,9 +41,7 @@ export interface Route<AdditionalMethods extends string = string> {
 export class HRouter {
 
     /**
-     * routerRoutes is an array that contains the routes added from the HalleyRouter
-     * 
-     * The routes contained in `routerRouter` will be added to the `halleyRoutes` array allocated in `Halley` class
+     * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
      */
     protected readonly routerRoutes: Route[] = [];
 
