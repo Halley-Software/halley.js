@@ -35,7 +35,7 @@ export interface Route<AdditionalMethods extends string = string> {
     path: PathLike,
     method: AdditionalMethods,
     handler: HalleyListener,
-    middleware?: MiddlewareReturn,
+    middleware?: MiddlewareReturn
 }
 
 export class HRouter {
