@@ -37,15 +37,17 @@ halley.ready(5000)
     ```ts
     import { Halley, type Route } from "@laniakeajs/halley.http"
 
-      const app = new Halley()
+    const app = new Halley()
 
-      app.setError = (_, res) => {
-        res
-          .status(404)
-          .setHeader("Content-Type", "text/html")
-          .write("<head><style>body {background-color: #242424;color: white}</style></head>")
-        res.send("<h2>This route does not exists!</h2>")
-      }
+    app.setError = (_, res) => {
+      res
+        .status(404)
+        .setHeader("Content-Type", "text/html")
+        .write("<head><style>body {background-color: #242424;color: white}</style></head>")
+      res.send("<h2>This route does not exists!</h2>")
+    }
+
+    ...
     ```
 
 - Now the `Route` interface have an optional generic type, to indicate the HTTP Methods that are alloweds
