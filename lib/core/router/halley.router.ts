@@ -10,7 +10,7 @@
  */
 import { Request } from "../request.js";
 import HALLEY_ROUTE_ERROR from "../../errors/RouteErrors.js";
-import { HalleyHandler, MiddlewareHandler, PathLike } from "../halley.js";
+import type { HalleyHandler, MiddlewareHandler, PathLike } from "../halley.js";
 
 
 /**
