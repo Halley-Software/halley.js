@@ -159,30 +159,35 @@ export class HRouter implements FunctionalMethods {
         return resolvedPath;
     }
 
+    /**
+     *
+     * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
+     *
+     * @param {Route | Route[]} incomingRoutes An array or an literal object, if is an array, you can give many routes.
      *
      * Meanwhile, if is a literal object you must use the method as much as routes you want add.
-     * 
+     *
      * @example
      * // If the param gived is an Array:
      * router.add([{
      *      path: "/",
-     *      method: "get",
-     *      handler: ((req, res) => {
+     *      method: "GET",
+     *      handler: (req, res) => {
      *          res.end("<h1>Hello World!</h1>")
-     *      })
+     *      }
      * }])
-     * 
+     *
      * // If the gived param is an literal object:
      * router.add({
      *      path: "/",
-     *      method: "get",
-     *      handler: ((req, res) => {
+     *      method: "GET",
+     *      handler: (req, res) => {
      *          res.end("<h1>Hello World!</h1>")
-     *      })
+     *      }
      * })
      * // With this way you only can add one route every time 'add' method is called
-     * 
-     * @returns `this` object
+     *
+     * @returns `this` The object itself
      */
     public add(incomingRoutes: Route | Route[]): this {
 
