@@ -87,6 +87,13 @@ export class HRouter implements FunctionalMethods {
     private routeStack: Route[];
 
     /**
+     * `root` path of the router
+     */
+    private routerPath: string;
+
+
+
+
      * 
      * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
      * 
