@@ -8,8 +8,10 @@
 /**
  * Halley.JS dependencies
  */
-import type { HalleyListener, MiddlewareReturn, PathLike } from "../halley.js";
 import { Request } from "../request.js";
+import HALLEY_ROUTE_ERROR from "../../errors/RouteErrors.js";
+import { HalleyHandler, MiddlewareHandler, PathLike } from "../halley.js";
+
 
 /**
  * External dependencies
