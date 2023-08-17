@@ -36,8 +36,9 @@ export type BasicMethods = "GET" | "POST" | "PUT" | "DELETE";
 export interface Route<AdditionalMethods extends string = string> {
     path: PathLike,
     method: AdditionalMethods,
-    handler: HalleyListener,
-    middleware?: MiddlewareReturn
+    handler: HalleyHandler,
+    middleware?: MiddlewareHandler
+}
 }
 
 /**
