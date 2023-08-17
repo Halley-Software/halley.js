@@ -189,8 +189,7 @@ export class HRouter implements FunctionalMethods {
      *
      * @returns `this` The object itself
      */
-    public add(incomingRoutes: Route | Route[]): this {
-
+    public add<T extends string = BasicMethods>(incomingRoutes: Route<T> | Route<T>[]): this {
         if (Array.isArray(incomingRoutes)) {
             incomingRoutes.forEach((routeItem: Route) => {
                 this.routerRoutes.push({
