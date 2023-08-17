@@ -209,4 +209,112 @@ export class HRouter implements FunctionalMethods {
         }
         return this;
     }
-}
+
+    /**
+     * Push a new object with the params to an array with all the routes of the running project
+     *
+     * halley.get works over the get http verb / method.
+     *
+     * Is commonly used to request data to the server
+     *
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     */
+    public get(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
+
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
+
+        this.add<"GET">({path, method: "GET", handler, middleware});
+        return this;
+    }
+
+    /**
+     * Push a new object with the params to an array with all the routes of the running project
+     *
+     * Different from halley.post, post works over the post http verb / method.
+     *
+     * Is commonly used to send data to the server
+     *
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     */
+    public post(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
+
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
+
+        this.add<"POST">({path, method: "POST", handler, middleware});
+        return this;
+    }
+
+    /**
+     * Push a new object with the params to an array with all the routes of the running project
+     *
+     * Different from other halley methods, put works over the put http verb / method.
+     *
+     * Is commonly used to update data to the server
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     */
+    public put(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
+
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        } 
+
+        this.add<"PUT">({path, method: "PUT", handler, middleware});
+        return this;
+    }
+
+    /**
+     * Push a new object with the params to an array with all the routes of the running project
+     *
+     * Different from other halley methods, delete works over the delete http verb / method.
+     *
+     * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     */
+    public delete(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
+        
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }            
+
+        this.add<"DELETE">({path, method: "DELETE", handler, middleware});
+        return this;
+    }
+
+
