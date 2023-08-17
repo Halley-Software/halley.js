@@ -38,7 +38,39 @@ export interface Route<AdditionalMethods extends string = string> {
     middleware?: MiddlewareReturn
 }
 
-export class HRouter {
+/**
+ * HalleyRouter (HRouter) is a vital part of Halley.js
+ * 
+ * - Save the declared routes via instance methods in an array
+ * 
+ * - It distinguish the declared routes by the path and HTTP method of that routes
+ * 
+ * - The `routerPath` is an important known variable of this class,
+ *   it is important because is the **base path** from where set off all the declared routes and stars a **new path structure**
+ *      - It is called `root` too, making reference from where spread the another routes,
+ *          - With `routerPath` we refer to a variable or value used inside the class
+ *          - With `root` we refer to an abstract value
+ * 
+ * For example:
+ *  - An HalleyRouter where the `routerPath` is "/about", the `root` path will be "/about"
+ *      - From there, a path structure will be extended, for example:
+ *          - "/about/career", in this case we understand that "/career" is part of the path structure, "/about"
+ *
+ * @example
+ *      /about <- "root" path for a HalleyRouter
+ *         |
+ *    -----|-----
+ *    |         |
+ *    |         |
+ * /career  /history
+ * 
+ * // "/career" and "/history" is part of the "/about" path structure,
+ * // so it can be accessed by from "/about/career" or "/about/history"
+ * 
+ * // Keep in mind that, the `root` path can have his own path too by type a route where the path is "/",
+ * // Then we can access to the `root` path of a HalleyRouter with the `routerPath` in this example "/about"
+ */
+export class HRouter implements FunctionalMethods {
 
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
