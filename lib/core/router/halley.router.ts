@@ -192,19 +192,19 @@ export class HRouter implements FunctionalMethods {
     public add<T extends string = BasicMethods>(incomingRoutes: Route<T> | Route<T>[]): this {
         if (Array.isArray(incomingRoutes)) {
             incomingRoutes.forEach((routeItem: Route) => {
-                this.routerRoutes.push({
-                    path: routeItem.path,
+                this.routeStack.push({
+                    path: this.handlePath(this.routerPath, routeItem.path),
                     method: routeItem.method,
-                    handler: routeItem.handler
+                    handler: routeItem.handler,
+                    middleware: routeItem.middleware
                 });
             });
-        }
-
-        else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
-            this.routerRoutes.push({
-                path: incomingRoutes.path,
+        } else if (Object.getPrototypeOf(incomingRoutes) === Object.prototype) {
+            this.routeStack.push({
+                path: this.handlePath(this.routerPath, incomingRoutes.path),
                 method: incomingRoutes.method,
-                handler: incomingRoutes.handler
+                handler: incomingRoutes.handler,
+                middleware: incomingRoutes.middleware
             });
         }
         return this;
