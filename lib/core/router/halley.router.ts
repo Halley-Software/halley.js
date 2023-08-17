@@ -108,7 +108,25 @@ export class HRouter implements FunctionalMethods {
         return this.routeStack;
     }
 
+    /**
+     * Iterate over the route stack and matches the params on the incoming request attaching them to the request object
+     * @param {string} path The url path of the incoming request
+     * @param {string} method The method of the incoming request
+     * @param {Request} req The incoming request object 
+     * @returns The literal object that had matched with the search patterns
+     */
+    protected iterateRoutes(path: string, method: string, req: Request): Route | undefined {
+        return this.routeStack.find((route: Route) => {
+            const pathRegex = pathTR.pathToRegexp(route.path);
+            const matcher = pathTR.match(route.path);
+            const matches = matcher(path);
+            if (matches) {
+                req.params = {...matches.params};
+            }
 
+            return pathRegex.test(path) && route.method === method;
+        })
+    }
 
      * 
      * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
