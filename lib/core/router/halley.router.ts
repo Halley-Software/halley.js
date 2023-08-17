@@ -91,6 +91,16 @@ export class HRouter implements FunctionalMethods {
      */
     private routerPath: string;
 
+    /**
+     * @param path `root` path of the router
+     * @param initialRoutes Array containing all the routes, initially can containg some routes, if empty it will be filled using instance methods: get, post, ...
+     */
+    public constructor(path: string, initialRoutes: Route[]) {
+        // If initial routes are provides it will the default value for route stack, else the initial value will be a empty array
+        this.routeStack = initialRoutes;
+        this.routerPath = path;
+    }
+    
 
 
 
