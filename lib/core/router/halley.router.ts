@@ -101,6 +101,12 @@ export class HRouter implements FunctionalMethods {
         this.routerPath = path;
     }
     
+    /**
+     * Returns all the declared routes
+     */
+    public get getRoutes(): Route[] {
+        return this.routeStack;
+    }
 
 
 
