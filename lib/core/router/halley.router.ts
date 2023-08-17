@@ -49,11 +49,11 @@ export interface FunctionalMethods {
 
 /**
  * HalleyRouter (HRouter) is a vital part of Halley.js
- * 
+ *
  * - Save the declared routes via instance methods in an array
- * 
+ *
  * - It distinguish the declared routes by the path and HTTP method of that routes
- * 
+ *
  * - The `routerPath` is an important known variable of this class,
  *   it is important because is the **base path** from where set off all the declared routes and stars a **new path structure**
  *      - It is called `root` too, making reference from where spread the another routes,
@@ -160,7 +160,6 @@ export class HRouter implements FunctionalMethods {
     }
 
     /**
-     *
      * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
      *
      * @param {Route | Route[]} incomingRoutes An array or an literal object, if is an array, you can give many routes.
@@ -317,9 +316,9 @@ export class HRouter implements FunctionalMethods {
         return this;
     }
 
-        /**
+    /**
      * Push a new object with the params to an array with all the routes of the running project
-     * 
+     *
      * By default, the function typing includes basic additional methods described that commonly used like HEAD, PATCH and OPTIONS
      * 
      *  - If using TypeScript, the method will be safe-type in accordance with generic type
@@ -327,7 +326,7 @@ export class HRouter implements FunctionalMethods {
      *  - If using JavaScript, can use JSDoc above the function
      * 
      * Affects to the route with the method that the user specifies
-     * 
+     *
      * @template {UsableMethods}
      * @param {string | RegExp} path The path where the listener will execute
      * @param {UsableMethods} method The HTTP method over the route will execute
@@ -335,7 +334,7 @@ export class HRouter implements FunctionalMethods {
      * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
-     * 
+     *
      * @example
      * // example for TypeScript
      * app.custom<"TRACE">("/", "TRACE", (req, res) => {...})
