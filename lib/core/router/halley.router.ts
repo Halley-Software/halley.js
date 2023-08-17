@@ -39,6 +39,12 @@ export interface Route<AdditionalMethods extends string = string> {
     handler: HalleyHandler,
     middleware?: MiddlewareHandler
 }
+
+export interface FunctionalMethods {
+    get: (path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler) => this,
+    post: (path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler) => this,
+    put: (path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler) => this,
+    delete: (path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler) => this
 }
 
 /**
