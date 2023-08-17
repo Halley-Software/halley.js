@@ -128,11 +128,38 @@ export class HRouter implements FunctionalMethods {
         })
     }
 
+    /**
+     * Returns a different value just as the value of the parameters:
      * 
-     * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
+     * `base root` = default `routerPath` later assigned by the Halley class -> "/"
      * 
-     * @param {Array | Object} incomingRoutes An array or an literal object, if is an array, you can give many routes.
-     * 
+     *  - If the `routerPath` is `base root`, that is "/", the returned value is exactly the same that `path` is when passed as argument
+     *  - If the `routerPath` is not "/":
+     *      @case
+     *      - If path type is **string**:
+     *          - When path is `root`, then it is understood that the `path` will be the same than the `routerPath`
+     *              * We assigns the `path` value without modify it
+     *          - If path is not `root`, then the value is the `routerPath` plus `path`
+     *              * To succeed this, we delete the first character and plus the `routerPath` to the result of that operation
+     *      @case
+     *      - If path type is a **RegExp**:
+     *          - When path is `root`, then it is understood that the `path` will be the same than the `routerPath`
+     *              * We compare the `RegExp.prototype.source` to a string with value "\/" representing the root being scaped to check this
+     *          - If path is not `root`. then the value is the `routerPath` plus `path`
+     *              * To succeed this, we delete the scape character from the `RegExp.prototype.source` and plus the `routerPath` to the result of that operation
+     */
+    private handlePath(routerPath: string, path: PathLike): PathLike {
+        const resolvedPath: PathLike =
+            routerPath === "/" ? path :
+            typeof path === "string" ? path === "/" ? routerPath : // If there are a declared route with "/" path and the `routerPath` is not "/"
+            routerPath + path.substring(0) :
+            path.source === "\/" ? path :
+            new RegExp(routerPath + path.source.substring(1));
+
+        return resolvedPath;
+    }
+
+     *
      * Meanwhile, if is a literal object you must use the method as much as routes you want add.
      * 
      * @example
