@@ -84,7 +84,7 @@ export class HRouter implements FunctionalMethods {
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
      */
-    protected readonly routerRoutes: Route[] = [];
+    private routeStack: Route[];
 
     /**
      * 
