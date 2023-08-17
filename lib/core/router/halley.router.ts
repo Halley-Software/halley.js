@@ -317,4 +317,41 @@ export class HRouter implements FunctionalMethods {
         return this;
     }
 
+        /**
+     * Push a new object with the params to an array with all the routes of the running project
+     * 
+     * By default, the function typing includes basic additional methods described that commonly used like HEAD, PATCH and OPTIONS
+     * 
+     *  - If using TypeScript, the method will be safe-type in accordance with generic type
+     * 
+     *  - If using JavaScript, can use JSDoc above the function
+     * 
+     * Affects to the route with the method that the user specifies
+     * 
+     * @template {UsableMethods}
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {UsableMethods} method The HTTP method over the route will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     * 
+     * @example
+     * // example for TypeScript
+     * app.custom<"TRACE">("/", "TRACE", (req, res) => {...})
+     */
+        public custom<UsableMethods extends string = "HEAD" | "PATCH" | "OPTIONS">
+        (path: PathLike, method: UsableMethods, handler: HalleyHandler, middleware?: MiddlewareHandler): this
+    {
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
 
+        this.add({path, method: method.toUpperCase(), handler, middleware});
+        return this;
+    }
+}
