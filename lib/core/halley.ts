@@ -364,20 +364,20 @@ export class Halley {
      * 
      * halley.ready(5000, { message: true })
      */
-    public ready(port: number, options?: {message?: string, hostname?: string}): Server {
+    public ready(port: number, options?: Partial<ListenOptions>): Server {
+        const server = createServer(kServerOptions);
+        server.on("request", async (req: Request, res: Reply) => {
+            await this.makeSuitable(req.url, req.method, req, res);
+        });
 
-        if (port !== this.port) {
-            throw new TypeError("The port must be the same that you indicated at Halley constructor");
+        if (options?.message) {
+            if (typeof options?.message === "boolean") {
+                console.log(`Halley listening on port \x1b[36m${port}\x1b[0m`)
+            } else {
+                options.message(port, super.getRoutes.length)
+            }
         }
 
-        const server = createServer(kServerOptions);
-        server.on("request", (req: Request, res: Reply) => {
-            this.appRequest = req;
-            this.appReply = res;
-            this.makeSuitable(this.appRequest.url, this.appRequest.method);
-            this._response(this.appRequest, this.appReply)
-        });
-        options?.message ? console.info(options.message) : console.info(`Halley listening on port ${port}`);
         return server.listen(port, options?.hostname ?? "0.0.0.0");
     }
 }
