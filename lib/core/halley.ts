@@ -332,33 +332,37 @@ export class Halley {
     }
 
     /**
-     * Ready method start your application and listen for requests on the indicated port at the constructor or as the first argument of `ready` method
-     * 
-     * @param {number} port Necessary parameter to listen requests. It must be the same port that the indicated at the constructor
-     * 
+     * Ready method start your application and listen for requests on the indicated `port`
+     *
+     * @param {number} port Necessary parameter, the indicated value will be the listen port for the server.
+     *
      * @param {string} options.message Optional parameter to show a custom message when the server is listening
-     * 
+     *
      * @param {string} options.hostname Optional parameter to indicate what IP address must listen the server
-     * 
+     *
      * @returns {Server} Returns a `server` instance
-     * 
-     * Commonly some frameworks indicate the port at a method similar to ready (listen, start...).
-     * 
-     * In Halley the port must be defined at the constructor, then indicate that port property as the firts parameter of `ready` method
-     * 
+     *
      * @example
-     *      
+     *
      * Import { Halley } from "halley.http"
-     * 
-     * const halley = new Halley({
-     *      port: 5000,
-     *      environment: "development"
-     * })
-     * 
-     * halley.ready(halley.port);
-     * 
+     *
+     * const halley = new Halley()
+     *
+     * // Make stuff
+     *
+     * halley.ready(5000);
+     *
      * // Now the server is listening for entering requests at indicated port
      * 
+     * // If u want use a custom message once the server has start
+     * 
+     * halley.ready(5000, { message(port, qRoutes) {
+     *      console.info(`Halley its listening in the port \x1b[36m${port}\x1b[0m\nHas been declared \x1b[31m${qRoutes}\x1b[0m routes in this instance`)
+     * }})
+     * 
+     * // Another way, if you want the default message
+     * 
+     * halley.ready(5000, { message: true })
      */
     public ready(port: number, options?: {message?: string, hostname?: string}): Server {
 
