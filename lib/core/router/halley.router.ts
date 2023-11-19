@@ -55,7 +55,7 @@ export interface FunctionalMethods {
  * - It distinguish the declared routes by the path and HTTP method of that routes
  *
  * - The `routerPath` is an important known variable of this class,
- *   it is important because is the **base path** from where set off all the declared routes and stars a **new path structure**
+ *   it is important because is the **base path** from where set off all the declared routes and starts a **new path structure**
  *      - It is called `root` too, making reference from where spread the another routes,
  *          - With `routerPath` we refer to a variable or value used inside the class
  *          - With `root` we refer to an abstract value
@@ -125,7 +125,7 @@ export class HRouter implements FunctionalMethods {
             }
 
             return pathRegex.test(path) && route.method === method;
-        })
+        });
     }
 
     /**
@@ -162,7 +162,7 @@ export class HRouter implements FunctionalMethods {
     /**
      * This is a full-form of declare routes, if you want a more simple way try the short-form declaration, using a Halley instance instead.
      *
-     * @param {Route | Route[]} incomingRoutes An array or an literal object, if is an array, you can give many routes.
+     * @param {Route | Route[]} incomingRoutes An array or an literal object, if is an array, you can give several routes.
      *
      * Meanwhile, if is a literal object you must use the method as much as routes you want add.
      *
@@ -284,7 +284,7 @@ export class HRouter implements FunctionalMethods {
             }
         } else if (path.source[1] !== "/") {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        } 
+        }
 
         this.add<"PUT">({path, method: "PUT", handler, middleware});
         return this;
@@ -310,9 +310,36 @@ export class HRouter implements FunctionalMethods {
             }
         } else if (path.source[1] !== "/") {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        }            
+        }
 
         this.add<"DELETE">({path, method: "DELETE", handler, middleware});
+        return this;
+    }
+
+    /**
+     * Push a new object with the params to an array with all the routes of the running project
+     *
+     * Different from other halley methods, options works over the options http verb / method.
+     * Is commonly used along with put or delete methods among others
+     *
+     * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
+     * @param {string | RegExp} path The path where the listener will execute
+     * @param {HalleyHandler} handler A callback function that will execute when the route is visited
+     * @param {MiddlewareHandler | undefined} middleware A middleware that only will be used in the route that is called
+     * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
+     * @returns `this` The object itself
+     */
+    public options(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
+        
+        if (typeof path === "string") {
+            if (path[0] !== "/") {
+                throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+            }
+        } else if (path.source[1] !== "/") {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
+
+        this.add<"OPTIONS">({path, method: "OPTIONS", handler, middleware});
         return this;
     }
 
@@ -339,8 +366,8 @@ export class HRouter implements FunctionalMethods {
      * // example for TypeScript
      * app.custom<"TRACE">("/", "TRACE", (req, res) => {...})
      */
-        public custom<UsableMethods extends string = "HEAD" | "PATCH" | "OPTIONS">
-        (path: PathLike, method: UsableMethods, handler: HalleyHandler, middleware?: MiddlewareHandler): this
+    public custom<UsableMethods extends string = "HEAD" | "PATCH" | "OPTIONS">
+    (path: PathLike, method: UsableMethods, handler: HalleyHandler, middleware?: MiddlewareHandler): this
     {
         if (typeof path === "string") {
             if (path[0] !== "/") {
