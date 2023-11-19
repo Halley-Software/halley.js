@@ -24,7 +24,7 @@ halley.ready(5000)
 
 - Now you listen on a port describing the port on `Halley.prototype.ready` function instead of the constructor
 
-- `Request.prototype.body` property has now `string` type, giving the user more versatility to use this variable
+- `Request.prototype.body` property has now type `any`, giving the user more versatility to use this variable
 
 - You can add some initial routes in the constructor using the `initialRoutes` property
 
@@ -187,4 +187,4 @@ halley.ready(5000)
 
 - Fix bug that doesnt allow use global middlewares and local middleware simultaneously (in method `makeSuitable` validation)
 
-## By the halley.js unique author for now - Raxabi <openhalleysoftware@gmail.com>
+## By the halley.js unique author at the moment - Raxabi <openhalleysoftware@gmail.com>
