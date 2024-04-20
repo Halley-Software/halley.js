@@ -467,19 +467,23 @@ export interface ListenOptions {
      * halley.ready(5000, { message: true })
      */
     public ready(port: number, options?: Partial<ListenOptions>): Server {
-        const server = createServer(kServerOptions);
+        const server = createServer({ 
+            IncomingMessage: Request,
+            ServerResponse: Reply
+        });
+
         server.on("request", async (req: Request, res: Reply) => {
             await this.makeSuitable(req.url, req.method, req, res);
         });
 
         if (options?.message) {
             if (typeof options?.message === "boolean") {
-                console.log(`Halley listening on port \x1b[36m${port}\x1b[0m`)
+                console.log(`Halley listening on port \x1b[36m${port}\x1b[0m`);
             } else {
-                options.message(port, super.getRoutes.length)
+                options.message(port, super.getRoutes.length);
             }
         }
 
-        return server.listen(port, options?.hostname ?? "0.0.0.0");
+        return server.listen(port, options?.hostname);
     }
 }
