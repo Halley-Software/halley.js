@@ -254,31 +254,36 @@ export interface ListenOptions {
     }
 
     /**
-     * Matches the gived param with any object of localRoutes and attach the handler of the return object to this._response
+     * Matches the gived param with one route in `routeStack` and exec the handler of that matched route, before that, any middleware is executed
      * 
      * @param {string} path The url of the route to match
      * 
      * @param {string} method The http verb / method that will use the route
+     *
+     * @param {Request} req The server request object
+     *
+     * @param {Reply} res The server response object
      */
-    private makeSuitable(path: string | undefined, method: string | undefined): void {
+    private async makeSuitable(path: string | undefined, method: string | undefined, req: Request, res: Reply): Promise<void> {
         if (path && method) {
-            const alreadyIterated = this.iterateRoutes(path, method);
-            if (!alreadyIterated) {
-                this._response = (req, res) => {
-                    res.status(404);
-                    res.send(`<h2>The route: '${path}' dont exists</h2>`);
-                }
-            } else {
-                if (alreadyIterated.middleware) {
+            const matchedRoute = super.iterateRoutes(path, method, req);
+            if (!matchedRoute) {
+                this.error(req, res, path);
+            } else if (matchedRoute) {
+                if (matchedRoute.middleware) {
                     // Check for individual middlewares
-                    alreadyIterated.middleware(this.appRequest, this.appReply);
+                    await Promise.resolve(await matchedRoute.middleware(req, res));
                 }
-                if (this.middlewares.length > 0) {
-                    this.middlewares.forEach((callback: HalleyListener) => {
-                        callback(this.appRequest, this.appReply);
-                    });
+
+                if (this.middlewareStack.length > 0) {
+                    await Promise.all(
+                        this.middlewareStack.map(callback => (
+                            callback(req, res)
+                        )
+                    ));
                 }
-                this._response = alreadyIterated.handler;
+
+                matchedRoute.handler(req, res);
             }
         }
     }
