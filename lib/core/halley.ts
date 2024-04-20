@@ -126,23 +126,18 @@ export class Halley {
      * 
      * @param {boolean} options.useNodeEnv If this option is indicated, a environment variable must be available so that Node.js can read
      */
-    public constructor(
-        options: {
-            port: number,
-            env?: HalleyEnvironment,
-            logger?: true,
-            useNodeEnv?: boolean,
-        }
-    ) {
-        this.port = options.port;
-        this.env = options.env ?? "development";
-        if (options.useNodeEnv && !process.env.NODE_ENV) {
-            throw new TypeError(
-                "'useNodeEnv' property is indicated at Halley constructor to use the 'NODE_ENV' environment variable. But it dont exists. Perhaps you had not used dotenv?"
-            );
-        }
-        if (options.useNodeEnv && process.env.NODE_ENV) {
-            this.env = process.env.NODE_ENV;
+    /**
+     * Read the request and push the contents into `req.body`
+     * @returns {MiddlewareHandler} Returns an callback asynchronous arrow function used internally by Halley
+     */
+    public static rawBodyParser(): MiddlewareHandler {
+        return async (req, _) => {
+            let chunk: Buffer;
+
+            req.body = ""; // Init the req.body to avoid "undefined" as the first value
+            for await (chunk of req) {
+                req.body += chunk.toString("utf-8");
+            }
         }
     }    
 
