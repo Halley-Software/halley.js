@@ -1,21 +1,40 @@
-/**
- * Halley.js 2022 - 2023
- * 
- * Original author: Raxabi <openhalleysoftware@gmail.com> at 2022 - 2023
- */
-
 'use strict';
 
-// Classes
-export * from "./core/halley.js";
-export * from "./core/request.js";
-export * from "./core/reply.js";
-export * from "./core/router/halley.router.js";
+import type {
+    HalleyHandler as THalleyHandler,
+    MiddlewareHandler as TMiddlewareHandler,
+    PathLike as TPathLike,
+    HalleyOptions,
+    ListenOptions
+} from "./core/halley.js";
 
-// Types and Interfaces
-import { HalleyEnvironment as HEnvironment, HalleyListener as HListener } from "./core/halley.js";
-import { Route as RouteInterface } from "./core/router/halley.router.js";
+export type HalleyHandler = THalleyHandler
+export type MiddlewareHandler = TMiddlewareHandler
+export type PathLike = TPathLike
 
-export type HalleyListener = HListener;
-export type HalleyEnvironment = HEnvironment;
-export interface Route extends RouteInterface {};
+export type { ListenOptions, HalleyOptions }
+
+import { Halley } from "./core/halley.js";
+import { HRouter } from "./core/router/halley.router.js";
+export { Request } from "./core/request.js";
+export { Reply } from "./core/reply.js";
+
+export { Halley, HRouter }
+
+/**
+ * Just inoke the function at get your instance of Halley!
+ * @param options create the instance with predefined options
+ * @returns A new Halley instance
+ */
+export default function halley(options?: Partial<HalleyOptions>) {
+    return new Halley(options)
+}
+
+/**
+ * Creates a new router by invoke the function
+ * @param path path where the router will register the routes 
+ * @returns A new HRouter instance
+ */
+export function createRouter(path: string) {
+    return new HRouter(path, [])
+}
