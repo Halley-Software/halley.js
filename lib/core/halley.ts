@@ -102,9 +102,12 @@ export class Halley {
     private appReply: Reply;
 
     /**
-     * The response contains the callback function that will be executed and change rely on the visited route
+     * Sets a callback function to execute in case that the requested route does not exists
      */
-    private _response: HalleyListener;
+    private error: ((req: Request, res: Reply, unsettledPath: string) => void) = (_, res, unsettlePath) => {
+        res.status(404);
+        res.send(`<h2>The route: '${unsettlePath}' dont exists</h2>`);
+    }
 
     /**
      * The settings indicate extra information about the server provider
