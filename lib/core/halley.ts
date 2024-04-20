@@ -116,18 +116,24 @@ export interface ListenOptions {
     }
 
     /**
-     * @param options Is the unique parameter for Halley class and it's an literal object.
+     * @param {HalleyOptions} options Is the unique parameter for Halley class constructor and it's an object.
      * 
      * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the Pino logger (Not implemented yet)
      * 
-     * @param {number} options.port Indicate to Halley where need to listen for entering routes. Necessary key parameter
+     * @param {string | undefined} options.path Indicate the `root path` of the main router, created at halley object creation 
      * 
-     * @param {HalleyEnvironment} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
+     * @param {string | undefined} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
      * 
      * @param {boolean} options.logger Enable or disable the Pino logger
      * 
      * @param {boolean} options.useNodeEnv If this option is indicated, a environment variable must be available so that Node.js can read
      */
+    public constructor(options?: Partial<HalleyOptions>) {
+        // Default value for the router will be a empty array
+        super(options?.path || "/", options?.initialRoutes ?? []);
+        this.middlewareStack = [];
+        this.env = options?.env ?? "development";
+    }
     /**
      * Read the request and push the contents into `req.body`
      * @returns {MiddlewareHandler} Returns an callback asynchronous arrow function used internally by Halley
