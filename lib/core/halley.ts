@@ -147,13 +147,107 @@ export class Halley {
     }    
 
     /**
-     * Iterate over the localRoutes of the actual Halley object
-     * @param {string} path The pattern that want to search
-     * @param {string} method The method of the incoming request
-     * @returns The literal object that had matched with the search patterns
+     * Asynchronous method for serve static files
+     *
+     * Add routes for each file inside the indicated directory as argument. So it can be accessed.
+     *
+     * If there are another directories inside the specified static dir, it will be skiped and his content will be not readed.
+     *
+     * @param {string} mountPath The path from which the files are requested
+     *
+     * @param {string} absPath The absolute path where the static files are located
+     *
+     * @param {Halley} app A Halley instance, commonly the instance that is being used to register the middleware
+     *
+     * @throws {HALLEY_ARGUMENT_IS_NOT_A_DIR} Throwed if the absPath is passed as a file
+     *
+     * @throws {HALLEY_ROUTE_DO_NOT_START_WITH_SLASH} Throwed if the mount path dont start with a '/', internally, it is used to make a route
+     *
+     * @returns {Promise<MiddlewareHandler>} Returns a callback asynchronous arrow function used internally by Halley
+     *
+     * @example
+     *
+     * const halley = new Halley()
+     *
+     * // For unix systems where the root dir starts with '/'
+     * const { pathname: __dirname } = new URL("../client/dist/", import.meta.url)
+     * // Use this if you are using esm modules, where '__dirname' is not available
+     *
+     * // For windows systems where the root dont start with '/' so you must delete the first slash like this
+     * const { pathname: statics } = new URL("../client/dist/", import.meta.url)
+     * const __dirname = statics.replace("/", "")
+     *
+     * halley
+     *   .register(await Halley.serveStatic("/assets", __dirname + "assets", halley))
+     *   .get("/", (req, res) => {
+     *     res.sendFile(__dirname + "index.html")
+     *   })
+     *   .listen(5000)
      */
-    private iterateRoutes(path: string, method: string): Route | undefined {
-        return this.routeStack.find((matchRoute: Route) => matchRoute.path === path && matchRoute.method === method);
+    public static async serveStatic(mountPath: string, absPath: string, app: Halley): Promise<MiddlewareHandler> {
+        const fsArgPosition = (await asyncFs.lstat(absPath)).isDirectory();
+        if (!fsArgPosition) {
+            throw HALLEY_FILE_ERROR.HALLEY_ARGUMENT_IS_NOT_A_DIR;
+        }
+
+        // this exception exists because after all, `serveStatic` method create a new route for each file
+        if (mountPath[0] !== "/" && mountPath.length === 0) {
+            throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
+        }
+
+        let absoluteStaticPath: string = absPath;
+        if (!path.isAbsolute(absoluteStaticPath)) {
+            absoluteStaticPath = path.resolve(absPath);
+        }
+
+        const dirItems = await asyncFs.readdir(absoluteStaticPath);
+        return async () => {
+            const statics: Route<[], "GET">[] = []; // Uses GET bucause only serves a resource request by the browser or another clients
+            for (const item of dirItems) {
+                const fullPathItem = `${absoluteStaticPath}${item}`;
+                let encoding: BufferEncoding = "utf-8";
+                let fileContentType: string;
+
+                const itemType = await asyncFs.lstat(fullPathItem);
+                if (itemType.isDirectory()) continue;
+                switch (true) {
+                    case new RegExp(".css$").test(item):
+                        fileContentType = "text/css";
+                    break;
+                    case new RegExp(".js$").test(item):
+                        fileContentType = "application/javascript";
+                    break;
+                    case new RegExp(".jpg$").test(item):
+                        encoding = "binary";
+                        fileContentType = "image/jpeg";
+                    break;
+                    case new RegExp(".png$").test(item):
+                        encoding = "binary";
+                        fileContentType = "image/png";
+                    break;
+                    case new RegExp(".mp4|mp3$").test(item):
+                        encoding = "binary";
+                        fileContentType = "audio/mp4";
+                    break;
+                }
+
+                /**
+                 * If the mount path is root ('/') directly appends the requested resource
+                 * 
+                 * In other case appends the specified mount path to an slash ('/') to separate from the requested resource 
+                 */
+                const finalMountPath = mountPath === "/" ? `${mountPath}${item}` : `${mountPath}/${item}`;
+                statics.push({
+                    path: finalMountPath,
+                    method: "GET",
+                    handler: (_, res) => {
+                        res.setHeader("Content-Type", fileContentType);
+                        res.sendFile(fullPathItem, encoding);
+                    }
+                });
+            }
+            app.add(statics);
+        }
     }
 
     /**
