@@ -289,11 +289,11 @@ export interface ListenOptions {
     }
 
     /** 
-     * Add a HalleyListener function returned by the execution of another function to middlewares stack
-     * @param {HalleyListener} appendedObject The source object that will be embedded into Halley class or the HalleyListener that will be executed
+     * Seat the error callback, executed when no route is founded in the route stack
      */
-    public register(appendedObject: HalleyListener): this {
-        this.middlewares.push(appendedObject);
+    public set setError(error: ((req: Request, res: Reply, unsettledPath: string) => void)) {
+        this.error = error;
+    }
         return this;
     }   
     
