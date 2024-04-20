@@ -109,11 +109,9 @@ export interface ListenOptions {
     }
 
     /**
-     * The settings indicate extra information about the server provider
+     * Contains the middlewares passed to the Halley class using the 'register' method
      */
-    private settings = {
-        "x-Powered-By": "Halley.js"
-    }
+    private middlewareStack: MiddlewareHandler[];
 
     /**
      * @param {HalleyOptions} options Is the unique parameter for Halley class constructor and it's an object.
