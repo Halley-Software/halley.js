@@ -33,11 +33,11 @@ export type BasicMethods = "GET" | "POST" | "PUT" | "DELETE";
  * * handler - `HalleyListener`
  * * middleware - `HalleyListener`
  */
-export interface Route<AdditionalMethods extends string = string> {
+export interface Route<Params extends string[] = string[], AdditionalMethods extends string = string> {
     path: PathLike,
     method: AdditionalMethods,
-    handler: HalleyHandler,
-    middleware?: MiddlewareHandler
+    handler: HalleyHandler<Params>,
+    middleware?: MiddlewareHandler<Params>
 }
 
 export interface FunctionalMethods {
@@ -84,7 +84,7 @@ export class HRouter implements FunctionalMethods {
     /**
      * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
      */
-    private routeStack: Route[];
+    private readonly routeStack: Route[];
 
     /**
      * `root` path of the router
@@ -92,8 +92,8 @@ export class HRouter implements FunctionalMethods {
     private routerPath: string;
 
     /**
-     * @param path `root` path of the router
-     * @param initialRoutes Array containing all the routes, initially can containg some routes, if empty it will be filled using instance methods: get, post, ...
+     * @param {string} path `root` path of the router
+     * @param {Route[]} initialRoutes Array containing all the routes, initially can containg some routes, if empty it will be filled using instance methods: get, post, ...
      */
     public constructor(path: string, initialRoutes: Route[]) {
         // If initial routes are provides it will the default value for route stack, else the initial value will be a empty array
@@ -116,7 +116,7 @@ export class HRouter implements FunctionalMethods {
      * @returns The literal object that had matched with the search patterns
      */
     protected iterateRoutes(path: string, method: string, req: Request): Route | undefined {
-        return this.routeStack.find((route: Route) => {
+        return this.routeStack.find((route) => {
             const pathRegex = pathTR.pathToRegexp(route.path);
             const matcher = pathTR.match(route.path);
             const matches = matcher(path);
@@ -188,9 +188,11 @@ export class HRouter implements FunctionalMethods {
      *
      * @returns `this` The object itself
      */
-    public add<T extends string = BasicMethods>(incomingRoutes: Route<T> | Route<T>[]): this {
+    public add<Params extends string[] = string[], Methods extends string = BasicMethods>
+        (incomingRoutes: Route<Params, Methods> | Route<Params, Methods>[]): this
+    {
         if (Array.isArray(incomingRoutes)) {
-            incomingRoutes.forEach((routeItem: Route) => {
+            incomingRoutes.forEach((routeItem) => {
                 this.routeStack.push({
                     path: this.handlePath(this.routerPath, routeItem.path),
                     method: routeItem.method,
@@ -222,8 +224,9 @@ export class HRouter implements FunctionalMethods {
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
      */
-    public get(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
-
+    public get<RParams extends string[] = string[]>
+        (path: PathLike, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
+    {
         if (typeof path === "string") {
             if (path[0] !== "/") {
                 throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
@@ -233,8 +236,7 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add<"GET">({path, method: "GET", handler, middleware});
-        return this;
+        return this.add<RParams, "GET">({path, method: "GET", handler, middleware});
     }
 
     /**
@@ -250,8 +252,9 @@ export class HRouter implements FunctionalMethods {
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
      */
-    public post(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
-
+    public post<RParams extends string[] = string[]>
+        (path: PathLike, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
+    {
         if (typeof path === "string") {
             if (path[0] !== "/") {
                 throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
@@ -260,8 +263,7 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add<"POST">({path, method: "POST", handler, middleware});
-        return this;
+        return this.add<RParams, "POST">({path, method: "POST", handler, middleware});
     }
 
     /**
@@ -276,8 +278,9 @@ export class HRouter implements FunctionalMethods {
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
      */
-    public put(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
-
+    public put<RParams extends string[] = string[]>
+        (path: PathLike, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
+    {
         if (typeof path === "string") {
             if (path[0] !== "/") {
                 throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
@@ -286,8 +289,7 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add<"PUT">({path, method: "PUT", handler, middleware});
-        return this;
+        return this.add<RParams, "PUT">({path, method: "PUT", handler, middleware});
     }
 
     /**
@@ -302,8 +304,9 @@ export class HRouter implements FunctionalMethods {
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
      */
-    public delete(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
-        
+    public delete<RParams extends string[] = string[]>
+        (path: PathLike, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
+    {    
         if (typeof path === "string") {
             if (path[0] !== "/") {
                 throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
@@ -312,8 +315,7 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add<"DELETE">({path, method: "DELETE", handler, middleware});
-        return this;
+        return this.add<RParams, "DELETE">({path, method: "DELETE", handler, middleware});
     }
 
     /**
@@ -329,8 +331,9 @@ export class HRouter implements FunctionalMethods {
      * @throws {HALLEY_ROUTE_ERROR} If the `path` does not starts with a slash '/'
      * @returns `this` The object itself
      */
-    public options(path: PathLike, handler: HalleyHandler, middleware?: MiddlewareHandler): this {
-        
+    public options<RParams extends string[] = string[]>
+        (path: PathLike, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
+    {
         if (typeof path === "string") {
             if (path[0] !== "/") {
                 throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
@@ -339,8 +342,7 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add<"OPTIONS">({path, method: "OPTIONS", handler, middleware});
-        return this;
+        return this.add<RParams, "OPTIONS">({path, method: "OPTIONS", handler, middleware});
     }
 
     /**
@@ -366,8 +368,8 @@ export class HRouter implements FunctionalMethods {
      * // example for TypeScript
      * app.custom<"TRACE">("/", "TRACE", (req, res) => {...})
      */
-    public custom<UsableMethods extends string = "HEAD" | "PATCH" | "OPTIONS">
-    (path: PathLike, method: UsableMethods, handler: HalleyHandler, middleware?: MiddlewareHandler): this
+    public custom<RParams extends string[] = string[], UsableMethods extends string = "HEAD" | "PATCH" | "OPTIONS">
+        (path: PathLike, method: UsableMethods, handler: HalleyHandler<RParams>, middleware?: MiddlewareHandler<RParams>): this
     {
         if (typeof path === "string") {
             if (path[0] !== "/") {
@@ -377,7 +379,6 @@ export class HRouter implements FunctionalMethods {
             throw HALLEY_ROUTE_ERROR.HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
         }
 
-        this.add({path, method: method.toUpperCase(), handler, middleware});
-        return this;
+        return this.add({path, method: method.toUpperCase(), handler, middleware});
     }
 }
