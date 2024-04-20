@@ -309,24 +309,18 @@ export interface ListenOptions {
     }
 
     /**
-     * Push the params to an array with all the routes of the running project
-     * 
-     * halley.get works over the get http verb / method.
-     * 
-     * Is commonly used to request data to the server
-     * 
-     * @param {string} path The path where the listener will execute
-     * @param {HalleyListener} handler A callback function that will execute when the route is visited
-     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
-     * @returns `this` object
+     * Add routes into the route stack
+     *
+     * Accept multiple routes in an array or only one route
+     * @param {Route | Route[]} routes
+     *
+     * @returns `this` The object itself
      */
-    public get(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
-
-        if (path[0] !== "/") {
-            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        }
-
-        this.routeStack.push({path, method: "GET", handler, middleware});
+    public use(routes: Route | Route[] | HRouter): this {
+        if (routes instanceof HRouter)
+            super.add(routes.getRoutes);
+        else
+            super.add(routes);
 
         return this;
     }
