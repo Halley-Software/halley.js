@@ -298,11 +298,13 @@ export interface ListenOptions {
     }   
     
     /**
-     * Add routes into the routeStack
-     * @param {Route} appendedObject
+     * Add a global middleware to the middleware stack
+     * @param {MiddlewareHandler} middleware The source object that will be embedded into Halley class or the HalleyHandler that will be executed
+     *
+     * @returns `this` The object itself
      */
-    public use(appendedObject: Route | Route[]): this {
-        Object.assign(this.routeStack, appendedObject)
+    public register(middleware: MiddlewareHandler): this {
+        this.middlewareStack.push(middleware);
         return this;
     }
 
