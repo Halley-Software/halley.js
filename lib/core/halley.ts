@@ -48,43 +48,42 @@ import { HALLEY_PATH_IS_NOT_ABSOLUTE, HALLEY_ARGUMENT_IS_NOT_A_DIR } from "../er
 import { HALLEY_ROUTE_DO_NOT_START_WITH_SLASH } from "../errors/RouteErrors.js";
 
 /**
- * Similar to RequestListener provided by `node:http`, a HalleyListener take an request and a response as parameters and manage it to generate a response
- * 
- * `RequestListener` use the IncomingMessage and ServerResponse classes provided by Node.js as Readable-Writeable Streams.
- * 
- * Meanwhile `HalleyListener` use extended classes of them adding extra functionality
+ * Same as `RequestListener` from `node:http`, but `HalleyHandler` works using `Request` and `Reply` classes instead of Node.js native streams
  */
-export type HalleyListener = (req: Request, res: Reply) => void;
+export type HalleyHandler<RParams extends string[] = string[]> = (req: Request<RParams>, res: Reply) => void | Promise<void>;
 
 /**
- * HalleyEnvironment indicate the environment of the project that is running
+ * Shorthand type to create middlewares
+ * @example
+ * const cors: (opts: { origin: string }) => MiddlewareHandler = ({ origin }) => {
+ *  return (req, res) => {...}
+ * }
  */
-export type HalleyEnvironment = "production" | "development";
-
-const kServerOptions: ServerOptions = {
-    IncomingMessage: Request,
-    ServerResponse: Reply
-} as const;
+export type MiddlewareHandler<Params extends string[] = string[]> = HalleyHandler<Params>;
 
 /**
- * Halley class is the base of Halley.js, from here we can add routes, listen for requests, modify headers from middlewares, etc...
+ * Defines the possible values for Halley class constructor
  */
-export class Halley {
+export interface HalleyOptions {
+    path: string,
+    env: string,
+    logger: boolean,
+    useNodeEnv: boolean,
+    initialRoutes: Route[]
+}
 
     /**
-     * The port is used to indicate to Halley where need to listen requests.
+ * Type Union between a string and RegExp
      */
-    public readonly port: number;
+export type PathLike = string | RegExp;
 
     /**
-     * The env indicate how is be developed an project
-     */
-    private env: HalleyEnvironment | string | undefined;
-
-    /**
-     * The localRoutes is an array that contain all the routes declared through the Halley methods (get, post, ...) or the HalleyRouter
-     */
-    private routeStack: Route[] = [];
+ * Options as second parameter in method 'ready'
+ */
+export interface ListenOptions {
+    message: boolean | ((port: number, routes: number) => void),
+    hostname: string
+}
 
     /**
      * Contains the middlewares passed to the Halley class using the 'use' method
