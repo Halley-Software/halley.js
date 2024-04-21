@@ -1,6 +1,6 @@
 # Docker file for Nodejs v10 container by testing halley.js compatibility
 
-FROM node:10.0.0-alpine
+FROM node:15.0.0-alpine
 
 WORKDIR /halley_server
 
