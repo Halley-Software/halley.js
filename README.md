@@ -9,9 +9,7 @@ Fast getting started:
 ```js
 import { Halley } from "halley.http"
 
-const halley = new Halley({
-  environment: "development"
-})
+const halley = new Halley()
 
 halley.get("/", (req, res) => {
   res.send("<h1>Hello World!</h1>")
@@ -35,16 +33,16 @@ halley.ready(5000)
   - For example:
 
     ```ts
-    import { Halley, type Route } from "@laniakeajs/halley.http"
+    import { Halley } from "@laniakeajs/halley.http"
 
     const app = new Halley()
 
-    app.setError = (_, res) => {
+    app.setError = (_, res, notFoundedPath) => {
       res
         .status(404)
         .setHeader("Content-Type", "text/html")
         .write("<head><style>body {background-color: #242424;color: white}</style></head>")
-      res.send("<h2>This route does not exists!</h2>")
+      res.send("<h2>The route " + notFoundedPath + " does not exists!</h2>")
     }
 
     ...
@@ -122,7 +120,7 @@ halley.ready(5000)
     // As long as the route ends with 's', but it can not contains only 's' for example: /s
     ```
 
-    - Of course, if you dont beings your route paths with a '/' it will throw an error too, an example would be this:
+    - Of course, if you dont starts your route paths with a '/' it will throw an error too, an example would be this:
 
     ```ts
     // Here we are using a literal regex, in this case, you need to escape the slash character (/), like in this example
@@ -187,4 +185,4 @@ halley.ready(5000)
 
 - Fix bug that doesnt allow use global middlewares and local middleware simultaneously (in method `makeSuitable` validation)
 
-## By the halley.js unique author at the moment - Raxabi <openhalleysoftware@gmail.com>
+## By the halley.js unique author / contributor at the moment - Raxabi <openhalleysoftware@gmail.com>
