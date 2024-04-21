@@ -1,51 +1,23 @@
 /**
- * Coded by Raxabi from Halley Software Open Source Developer Team. HSOSDT
- * 
- * Can call it Halley Software Developer Team. HSDT, because all that we make is Open Source :D
- * 
- * Contributors on root of the project, "/contributors.js"
- * 
- */
-
-/**
- * Halley is the main core of the project.
- * Here we make use of all another classes and objects to build a response that the Node.js HTTP Server can interpret
- */
-
-/**
- * Halley.js use and take as reference some third-party modules, so here are the mentions about there :D
- * 
- * Halley.js borned as a inspiration in express, so, it had taken some things from it like: The request and response classes, his middleware style, etc...
- * 
- * Halley.js use the pino logger https://github.com/pinojs/pino
- * 
- * Halley.js take some things as reference from tinyhttp like: properties used at tsconfig.json https://github.com/tinyhttp/tinyhttp
- * 
+ * Programmed by Halley Software
+ *
+ * Contributors on root of the project at file "contributors"
  */
 
 'use strict';
 
-/**
- * Node.JS dependencies
- */
-
-import { Server, createServer, ServerOptions } from "node:http";
+// Node.js dependencies
 import path from "node:path";
-import fs from "node:fs/promises";
-import process from "node:process";
+import asyncFs from "node:fs/promises";
+import { Server, createServer } from "node:http";
 
-// JavaScript good practice
-const { Object } = globalThis;
-
-/**
- * Halley.JS dependencies
- */
-
+// Halley.js dependencies
 import { Request } from "./request.js";
 import { Reply } from "./reply.js";
-import { Route } from "./router/halley.router.js";
-import { HALLEY_PATH_IS_NOT_ABSOLUTE, HALLEY_ARGUMENT_IS_NOT_A_DIR } from "../errors/FileErrors.js";
-import { HALLEY_ROUTE_DO_NOT_START_WITH_SLASH } from "../errors/RouteErrors.js";
+import { HRouter, type Route } from "./router/halley.router.js";
+
+import HALLEY_FILE_ERROR from "../errors/FileErrors.js";
+import HALLEY_ROUTE_ERROR from "../errors/RouteErrors.js";
 
 /**
  * Same as `RequestListener` from `node:http`, but `HalleyHandler` works using `Request` and `Reply` classes instead of Node.js native streams
@@ -72,12 +44,12 @@ export interface HalleyOptions {
     initialRoutes: Route[]
 }
 
-    /**
+/**
  * Type Union between a string and RegExp
-     */
+ */
 export type PathLike = string | RegExp;
 
-    /**
+/**
  * Options as second parameter in method 'ready'
  */
 export interface ListenOptions {
@@ -85,20 +57,19 @@ export interface ListenOptions {
     hostname: string
 }
 
-    /**
-     * Contains the middlewares passed to the Halley class using the 'use' method
-     */
-    private middlewares: HalleyListener[] = [];
+/**
+ * From `Halley` class can:
+ *  - Set a default error when a route is doesnt matched (route doesnt found)
+ *  - Add middlewares for all the routes
+ *  - Serve static files like: JavaScript, css, images, etc
+ *  - Appends routes declared on other HRouter intances
+ */
+export class Halley extends HRouter {
 
     /**
-     * It is equaled to the entering request for manage different aspects like piped data
+     * Indicate the state of the project, the default value is "development".
      */
-    private appRequest: Request;
-
-    /**
-     * It is equaled to the outgoing response for manage different aspects like outgoing headers
-     */
-    private appReply: Reply;
+    private env: string;
 
     /**
      * Sets a callback function to execute in case that the requested route does not exists
@@ -115,15 +86,15 @@ export interface ListenOptions {
 
     /**
      * @param {HalleyOptions} options Is the unique parameter for Halley class constructor and it's an object.
-     * 
+     *
      * The values of every property of options indicate Halley.js how must create the http server or how must work some parts of Halley like the Pino logger (Not implemented yet)
-     * 
+     *
      * @param {string | undefined} options.path Indicate the `root path` of the main router, created at halley object creation 
      * 
      * @param {string | undefined} options.env Indicate to Halley how is be developed an project. If it isn't indicated, Halley will assume that is an development environment
-     * 
+     *
      * @param {boolean} options.logger Enable or disable the Pino logger
-     * 
+     *
      * @param {boolean} options.useNodeEnv If this option is indicated, a environment variable must be available so that Node.js can read
      */
     public constructor(options?: Partial<HalleyOptions>) {
@@ -132,6 +103,7 @@ export interface ListenOptions {
         this.middlewareStack = [];
         this.env = options?.env ?? "development";
     }
+
     /**
      * Read the request and push the contents into `req.body`
      * @returns {MiddlewareHandler} Returns an callback asynchronous arrow function used internally by Halley
@@ -145,7 +117,7 @@ export interface ListenOptions {
                 req.body += chunk.toString("utf-8");
             }
         }
-    }    
+    }
 
     /**
      * Asynchronous method for serve static files
@@ -253,9 +225,9 @@ export interface ListenOptions {
 
     /**
      * Matches the gived param with one route in `routeStack` and exec the handler of that matched route, before that, any middleware is executed
-     * 
+     *
      * @param {string} path The url of the route to match
-     * 
+     *
      * @param {string} method The http verb / method that will use the route
      *
      * @param {Request} req The server request object
@@ -286,15 +258,13 @@ export interface ListenOptions {
         }
     }
 
-    /** 
+    /**
      * Seat the error callback, executed when no route is founded in the route stack
      */
     public set setError(error: ((req: Request, res: Reply, unsettledPath: string) => void)) {
         this.error = error;
     }
-        return this;
-    }   
-    
+
     /**
      * Add a global middleware to the middleware stack
      * @param {MiddlewareHandler} middleware The source object that will be embedded into Halley class or the HalleyHandler that will be executed
@@ -324,110 +294,6 @@ export interface ListenOptions {
     }
 
     /**
-     * Push the params to an array with all the routes of the running project
-     * 
-     * Different from halley.post, post works over the post http verb / method.
-     * 
-     * Is commonly used to send data to the server
-     * 
-     * @param {string} path The path where the listener will execute
-     * @param {HalleyListener} handler A callback function that will execute when the route is visited
-     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
-     * @returns `this` object
-     */
-    public post(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
-
-        if (path[0] !== "/") {
-            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        }
-        
-        this.routeStack.push({path, method: "POST", handler, middleware});
-
-        return this;
-    }
-
-    /**
-     * Push the params to an array with all the routes of the running project
-     * 
-     * Different from other halley methods, put works over the put http verb / method.
-     * 
-     * Is commonly used to update data to the server
-     * @param {string} path The path where the listener will execute
-     * @param {HalleyListener} handler A callback function that will execute when the route is visited
-     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
-     * @returns `this` object
-     */
-    public put(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
-
-        if (path[0] !== "/") {
-            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        }
-
-        this.routeStack.push({path, method: "PUT", handler, middleware});
-
-        return this;
-    }
-
-    /**
-     * Push the params to an array with all the routes of the running project
-     * 
-     * Different from other halley methods, delete works over the delete http verb / method.
-     * 
-     * Is commonly used to delete data from the server (for exameple a field of one row in a sql database)
-     * @param {string} path The path where the listener will execute
-     * @param {HalleyListener} handler A callback function that will execute when the route is visited
-     * @param {HalleyListener} middleware A middleware that only will be used in the route that is called
-     * @returns `this` object
-     */
-    public delete(path: string, handler: HalleyListener, middleware?: HalleyListener): this {
-
-        if (path[0] !== "/") {
-            throw HALLEY_ROUTE_DO_NOT_START_WITH_SLASH;
-        }
-
-        this.routeStack.push({path, method: "DELETE", handler, middleware});
-
-        return this;
-    }
-
-    /**
-     * 
-     * Add routes for each file inside the indicated directory as argument. So it can be accessed
-     * If there are another directories inside the specified static dir, it will be skiped and his content will not be readed
-     * 
-     */
-    public async serveStatic(dirPath: string): Promise<void> {
-        if (!path.isAbsolute(dirPath)) {
-            throw HALLEY_PATH_IS_NOT_ABSOLUTE;
-        }
-        const fileOrDirectoryArgument = (await fs.lstat(dirPath)).isDirectory()
-        if (!fileOrDirectoryArgument) {
-            throw HALLEY_ARGUMENT_IS_NOT_A_DIR;
-        }
-        const dirItems = await fs.readdir(dirPath);
-        for (const item of dirItems) {
-            const itemType = await fs.lstat(`${dirPath}/${item}`)
-            if (itemType.isDirectory()) {
-                continue;
-            }
-            this.get(`/${item}`, (_req, res) => {
-                switch (true) {
-                    case /.\.css$/.test(item):
-                        res.setHeader("Content-Type", "text/css");
-                    break;
-                    case /.\.js$/.test(item):
-                        res.setHeader("Content-Type", "text/js");
-                    break;
-                    default:
-                        res.setHeader("Content-Type", "text/plain");
-                    break;
-                }
-                res.sendFile(`${dirPath}/${item}`);
-            });
-        }
-    }
-
-    /**
      * Ready method start your application and listen for requests on the indicated `port`
      *
      * @param {number} port Necessary parameter, the indicated value will be the listen port for the server.
@@ -440,7 +306,7 @@ export interface ListenOptions {
      *
      * @example
      *
-     * Import { Halley } from "halley.http"
+     * Import { Halley } from "@laniakea.js/halley.http"
      *
      * const halley = new Halley()
      *
