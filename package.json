@@ -2,7 +2,7 @@
   "name": "@laniakeajs/halley.http",
   "author": "Raxabi <openhalleysoftware@gmail.com>",
   "publisher": "Halley Software",
-  "version": "2.0.0-next.8",
+  "version": "2.0.0-next.19.4",
   "contributors": [
     "Raxabi"
   ],
@@ -28,13 +28,13 @@
   "homepage": "https://github.com/Halley-Software/halley.js#readme",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/typings/index.d.ts",
-  "exports": "./dist/index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "test:server": "nodemon test/server/index.ts",
-    "test:js": "nodemon test/index.js"
+    "bench": "autocannon -c 100 -d 40 -p 10 192.168.1.139:5000/",
+    "dev": "nodemon -e ts,js --exec tsx \"test/server/index.ts\"",
+    "dev:js": "nodemon -e ts,js --exec tsx \"test/server/index.js\""
   },
   "files": [
     "package.json",
@@ -47,17 +47,14 @@
   },
   "devDependencies": {
     "@tinyhttp/cors": "^2.0.0",
-    "@types/autocannon": "^7.9.1",
-    "@types/express": "^4.17.17",
-    "@types/node": "20.4.10",
-    "autocannon": "^7.12.0",
-    "eslint": "8.47.0",
-    "express": "^4.18.2",
-    "nodemon": "3.0.1",
-    "tsx": "^3.12.7",
-    "typescript": "5.1.6"
+    "@types/autocannon": "^7.12.5",
+    "@types/node": "^20.12.7",
+    "autocannon": "^7.15.0",
+    "nodemon": "3.1.0",
+    "tsx": "^4.7.2",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
-    "path-to-regexp": "^6.2.1"
+    "path-to-regexp": "6.2.2"
   }
 }
