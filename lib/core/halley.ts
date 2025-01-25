@@ -4,8 +4,6 @@
  * Contributors on root of the project at file "contributors"
  */
 
-'use strict';
-
 // Node.js dependencies
 import path from "node:path";
 import asyncFs from "node:fs/promises";

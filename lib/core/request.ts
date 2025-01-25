@@ -2,8 +2,6 @@
  * Rewrited subclass Request from express.js with classes syntax
  */
 
-'use strict';
-
 // Node.js dependencies
 import { IncomingMessage } from "node:http";
 

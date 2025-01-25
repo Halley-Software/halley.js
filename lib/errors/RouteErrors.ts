@@ -1,7 +1,6 @@
 /**
  * Exceptions for errors related to routes
  */
-'use strict';
 
 export default class HALLEY_ROUTE_ERROR extends Error {
     constructor(message: string, name: string) {

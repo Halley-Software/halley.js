@@ -3,8 +3,6 @@
  * It is used to take the routes gived from an input and process them somehow.
  */
 
-'use strict';
-
 /**
  * Halley.JS dependencies
  */

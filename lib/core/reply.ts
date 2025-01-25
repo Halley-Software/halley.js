@@ -2,8 +2,6 @@
  * Rewrited subclass Response from express.js with classes syntax
  */
 
-'use strict';
-
 // Node.js dependencies
 import { IncomingMessage, ServerResponse } from "node:http";
 import { isAbsolute, resolve } from "node:path";

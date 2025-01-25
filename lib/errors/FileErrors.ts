@@ -1,7 +1,6 @@
 /**
  * Exceptions for errors related to files, paths, etc...
  */
-'use strict';
 
 export default class HALLEY_FILE_ERROR extends Error {
     constructor(message: string, name: string) {

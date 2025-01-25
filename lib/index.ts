@@ -1,5 +1,3 @@
-'use strict';
-
 import type {
     HalleyHandler as THalleyHandler,
     MiddlewareHandler as TMiddlewareHandler,
